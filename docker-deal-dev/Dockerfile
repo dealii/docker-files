@@ -12,10 +12,12 @@ mkdir build && cd build && \
           -DCMAKE_INSTALL_PREFIX=~/deal.II/installed \
           -DCMAKE_BUILD_TYPE=Debug \
           -DP4EST_DIR=~/libs/p4est-0.3.4.2/ \
+	  -DPETSC_DIR=~/libs/petsc-3.4.5/ \
+	  -DPETSC_ARCH=arch-linux2-cxx-debug \
           -DTRILINOS_DIR=~/libs/trilinos-$TRILINOS_VERSION/ \
           -DHDF5_DIR=~/libs/hdf5/ \
           ../dealii && \
-    make -j4 && make install
+    make -j1 && make install
 
 # && make clean 
 
