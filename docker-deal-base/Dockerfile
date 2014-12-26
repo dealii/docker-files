@@ -15,7 +15,9 @@ RUN apt-get update && apt-get -yq install gcc \
     cmake \
     git \
     wget \
-    python
+    python \
+    numdiff \
+    ninja
 
 WORKDIR $HOME
 
