@@ -19,7 +19,7 @@ RUN apt-get update && apt-get -yq install gcc \
     numdiff \
     ninja-build
 
-WORKDIR $HOME
+WORKDIR /root
 
 #Build p4est
 RUN wget http://p4est.github.io/release/p4est-0.3.4.2.tar.gz && \
