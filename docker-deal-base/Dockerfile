@@ -17,7 +17,7 @@ RUN apt-get update && apt-get -yq install gcc \
     wget \
     python \
     numdiff \
-    ninja
+    ninja-build
 
 WORKDIR $HOME
 
