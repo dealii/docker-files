@@ -6,6 +6,7 @@ MAINTAINER timo.heister@gmail.com
 # deal.II
 RUN mkdir $HOME/deal.II && cd $HOME/deal.II && \
 git clone https://github.com/dealii/dealii.git && \
+git checkout dealii-8.2 && \
 mkdir build && cd build && \
     cmake -DDEAL_II_WITH_MPI=ON \
           -DDEAL_II_COMPONENT_EXAMPLES=OFF \
