@@ -20,7 +20,7 @@ mkdir build && cd build && \
           ../dealii && \
     make -j1 && make install
 
-ENV DEAL_II_DIR "~/deal.II/installed"
+ENV DEAL_II_DIR ~/deal.II/installed
 
 # && make clean 
 
