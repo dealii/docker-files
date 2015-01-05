@@ -71,6 +71,6 @@ RUN cd libs && wget http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-lit
     export PETSC_DIR=`pwd` && \
     ./configure --download-scalapack=1 --download-mumps=1 --download-metis --download-parmetis --download-f-blas-lapack=1 \
     			  --with-shared-libraries=1 --with-clanguage=C++ --download-hypre=1  --with-x=0 --with-debugging=1 \
-    			  COPTFLAGS='-O3 -march=native -mtune=native' FOPTFLAGS='-O3 -qarch=native -qtune=native' && \
+    			  COPTFLAGS='-O3' FOPTFLAGS='-O3' && \
     make all
 
