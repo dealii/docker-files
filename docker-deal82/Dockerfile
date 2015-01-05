@@ -25,6 +25,3 @@ RUN cd deal.II && \
     cd .. && rm -rf build
 
 ENV DEAL_II_DIR ~/deal.II/installed
-
-# && make clean 
-

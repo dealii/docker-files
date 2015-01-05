@@ -2,9 +2,6 @@ FROM tjhei/deal82
 
 MAINTAINER timo.heister@gmail.com
 
-ENV HOME /root
-WORKDIR /root
-
 RUN apt-get install -yq clang
 
 RUN cd deal.II && \
