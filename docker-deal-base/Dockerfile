@@ -4,6 +4,14 @@ MAINTAINER timo.heister@gmail.com
 # based on work by Rene Gassmoeller
 
 ENV HOME /root
+WORKDIR /root
+
+# Set the locale
+# this is required so that ASPECT can format numbers with , separators
+RUN locale-gen en_US.UTF-8  
+ENV LANG en_US.UTF-8  
+ENV LANGUAGE en_US:en  
+ENV LC_ALL en_US.UTF-8
 
 RUN apt-get update && apt-get -yq install gcc \
     g++ \
@@ -19,19 +27,18 @@ RUN apt-get update && apt-get -yq install gcc \
     numdiff \
     ninja-build
 
-WORKDIR /root
-
 #Build p4est
-RUN wget http://p4est.github.io/release/p4est-0.3.4.2.tar.gz && \
+ENV P4EST_VERSION 0.3.4.2
+RUN wget http://p4est.github.io/release/p4est-$P4EST_VERSION.tar.gz && \
     wget http://www.dealii.org/developer/external-libs/p4est-setup.sh && \
     chmod +x p4est-setup.sh && \
-    ./p4est-setup.sh p4est-0.3.4.2.tar.gz ~/libs/p4est-0.3.4.2 && \
-    rm -rf p4est-build p4est-0.3.4.2 p4est-setup.sh p4est-0.3.4.2.tar.gz
+    ./p4est-setup.sh p4est-$P4EST_VERSION.tar.gz ~/libs/p4est-$P4EST_VERSION && \
+    rm -rf p4est-build p4est-$P4EST_VERSION p4est-setup.sh p4est-$P4EST_VERSION.tar.gz
 
 #Build HDF5
 ENV HDF_VERSION 1.8.14
 RUN wget http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-$HDF_VERSION.tar.bz2 && \
-    tar xjvf hdf5-$HDF_VERSION.tar.bz2 && \
+    tar xjf hdf5-$HDF_VERSION.tar.bz2 && \
     cd hdf5-$HDF_VERSION &&  \
     ./configure --enable-parallel \
                 --enable-shared \
@@ -43,7 +50,7 @@ RUN wget http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-$HDF_VERSION.tar.bz2 
 #Build Trilinos
 ENV TRILINOS_VERSION 11.8.1
 RUN wget http://trilinos.sandia.gov/download/files/trilinos-$TRILINOS_VERSION-Source.tar.bz2 && \
-    tar xjvf trilinos-$TRILINOS_VERSION-Source.tar.bz2 && \
+    tar xjf trilinos-$TRILINOS_VERSION-Source.tar.bz2 && \
     mkdir trilinos-$TRILINOS_VERSION-Source/build && \
     cd trilinos-$TRILINOS_VERSION-Source/build && \
     cmake -D Trilinos_ENABLE_Sacado=ON \
