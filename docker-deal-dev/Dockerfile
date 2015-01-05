@@ -9,7 +9,6 @@ RUN mkdir $HOME/deal.II && cd $HOME/deal.II && \
 
 #build
 RUN cd deal.II && \
-    cd dealii && git checkout dealii-8.2 && cd .. && \
     mkdir build && cd build && \
     cmake -DDEAL_II_WITH_MPI=ON \
           -DDEAL_II_COMPONENT_EXAMPLES=OFF \
