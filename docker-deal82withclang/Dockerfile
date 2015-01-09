@@ -9,6 +9,7 @@ RUN cd deal.II && \
     mkdir buildclang && cd buildclang && \
     CXX=clang++ CC=clang \
     cmake -D DEAL_II_CXX_FLAGS_DEBUG="-O1 -fsanitize=address -fno-omit-frame-pointer -Wlogical-op-parentheses" \
+    	  -D DEAL_II_LINKER_FLAGS_DEBUG="-fsanitize=address" \
           -DDEAL_II_WITH_MPI=ON \
           -DDEAL_II_COMPONENT_EXAMPLES=OFF \
           -DCMAKE_INSTALL_PREFIX=~/deal.II/installedclang \
@@ -19,5 +20,5 @@ RUN cd deal.II && \
           -DTRILINOS_DIR=~/libs/trilinos-11.8.1/ \
           -DHDF5_DIR=~/libs/hdf5/ \
           ../dealii && \
-    make -j4 && make install && \
+    make -j4 && make install && make test && \
     cd .. && rm -rf buildclang
