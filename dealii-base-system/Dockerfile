@@ -1,7 +1,7 @@
 FROM ubuntu:14.04
 
-MAINTAINER timo.heister@gmail.com
-# based on work by Rene Gassmoeller
+MAINTAINER luca.heltai@gmail.com
+# based on work by Rene Gassmoeller and Timo Heister
 
 ENV HOME /root
 WORKDIR /root
