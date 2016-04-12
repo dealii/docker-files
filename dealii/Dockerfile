@@ -1,7 +1,7 @@
 FROM dealii/dealii-external-libraries
 
-MAINTAINER luca.heltai@gmail.com
-# based on work by Rene Gassmoeller and Timo Heister
+MAINTAINER timo.heister@gmail.com
+# based on work by Rene Gassmoeller
 
 # deal.II repo
 RUN mkdir $HOME/deal.II && cd $HOME/deal.II && \
