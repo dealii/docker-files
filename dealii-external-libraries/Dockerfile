@@ -81,3 +81,19 @@ RUN cd libs && wget http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-lit
     			  COPTFLAGS='-O3' FOPTFLAGS='-O3' && \
     make all
 
+#sundials
+ENV SUNDIALS_VERSION 2.6.2
+ENV SUNDIALS_DIR $HOME/libs/sundials-$SUNDIALS_VERSION
+RUN wget https://github.com/luca-heltai/sundials/archive/v$SUNDIALS_VERSION.tar.gz &&\
+    tar xf v$SUNDIALS_VERSION.tar.gz && rm -f v$SUNDIALS_VERSION.tar.gz && \
+    cd sundials-$SUNDIALS_VERSION && \
+    mkdir build && cd build \
+    cmake \
+	-DCMAKE_INSTALL_PREFIX=$HOME/libs/sundials-$SUNDIALS_VERSION \
+	-DLAPACK_ENABLE=ON \
+	-DMPI_ENABLE=ON \
+	-DPTHREAD_ENABLE=ON && \
+    make -j4 && make install && \
+    cd $HOME \
+    rm -rf sundials-$SUNDIALS_VERSION
+    
