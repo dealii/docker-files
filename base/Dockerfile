@@ -21,7 +21,8 @@ RUN \
     cd astyle/build/gcc && \
     make && \
     USER=root make install && \
-    rm -rf /root/astyle*
+    cd - && \
+    rm -rf astyle*
 
 USER bob
 
