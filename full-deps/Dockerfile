@@ -23,7 +23,11 @@ USER bob
 
 RUN git clone https://github.com/tjhei/candi; cd candi; git checkout experimental
 
+USER root
 ADD candi.cfg  $HOME/candi/
+RUN chown bob:bob $HOME/candi/candi.cfg
+USER bob
+
 RUN \
   cd candi; \
   ./candi.sh -j4 --prefix=~/libs
