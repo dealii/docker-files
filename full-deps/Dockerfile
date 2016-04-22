@@ -23,12 +23,16 @@ USER bob
 
 RUN git clone https://github.com/tjhei/candi; cd candi; git checkout experimental
 
-#ADD candi $HOME/candi
 ADD candi.cfg  $HOME/candi/
 RUN \
   cd candi; \
-  ./candi.sh -j4 --prefix=~/libs; \
-  rm -rf ~/libs/tmp
+  ./candi.sh -j4 --prefix=~/libs
+
+RUN cat ~/libs/configuration/* | grep export
+
+ENV P4EST_DIR=/home/bob/libs/p4est-1.1
+
+#RUN rm -rf ~/candi ~/libs/tmp
 
 
 
