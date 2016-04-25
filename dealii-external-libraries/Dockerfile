@@ -142,3 +142,9 @@ RUN wget https://github.com/luca-heltai/sundials/archive/v$SUNDIALS_VERSION.tar.
     rm -rf sundials-$SUNDIALS_VERSION
     
 ENV SUNDIALS_DIR $HOME/libs/sundials-$SUNDIALS_VERSION
+
+#assimp
+USER root
+RUN apt-get install -y libassimp-dev assimp-utils
+USER dealii 
+ENV ASSIMP_DIR /usr
