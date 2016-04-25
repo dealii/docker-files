@@ -148,3 +148,13 @@ USER root
 RUN apt-get install -y libassimp-dev assimp-utils
 USER dealii 
 ENV ASSIMP_DIR /usr
+
+#oce
+USER root
+RUN apt-get install -y \
+    liboce-foundation-dev \
+    liboce-foundation8 \
+    liboce-modeling-dev \
+    liboce-modeling8
+USER dealii
+ENV OPENCASCADE_DIR /usr
