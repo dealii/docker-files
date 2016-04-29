@@ -35,9 +35,12 @@ RUN \
 # here instead:
 RUN cat ~/libs/configuration/* | grep export
 
-ENV P4EST_DIR=/home/bob/libs/p4est-1.1
 ENV HDF5_DIR=/home/bob/libs/hdf5-1.8.15-patch1
+ENV OPENCASCADE_DIR=/home/bob/libs/oce-OCE-0.17
+ENV METIS_DIR=/home/bob/libs/parmetis-4.0.3
+ENV PARMETIS_DIR=/home/bob/libs/parmetis-4.0.3
 ENV PETSC_DIR=/home/bob/libs/petsc-3.6.4
+ENV SLEPC_DIR=/home/bob/libs/slepc-3.6.0
 ENV TRILINOS_DIR=/home/bob/libs/trilinos-12.4.2-Source
 
 RUN rm -rf ~/candi ~/libs/tmp
