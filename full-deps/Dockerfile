@@ -18,20 +18,16 @@ RUN apt-get update && sudo apt-get -yq install \
     python \
     numdiff \
     ninja-build
-
 USER bob
 
-#RUN git clone https://github.com/tjhei/candi; cd candi; git checkout experimental
-RUN git clone https://github.com/tjhei/candi; cd candi; git checkout 88d181c
-
 USER root
-ADD candi.cfg  $HOME/candi/
-RUN chown bob:bob $HOME/candi/candi.cfg
+ADD candi/ $HOME/candi/
+RUN chown -R bob:bob $HOME/candi/
 USER bob
 
 RUN \
   cd candi; \
-  ./candi.sh -j4 --prefix=~/libs
+  ./candi.sh -j4 --prefix=~/libs --packages="load:dealii-prepare once:opencascade once:parmetis once:hdf5 once:p4est once:trilinos once:petsc once:slepc"
 
 # I don't know how to import env vars from the configuration folder.  This
 # probably doesn't work at all, because we don't use bash but sh and so we can
@@ -45,7 +41,3 @@ ENV PETSC_DIR=/home/bob/libs/petsc-3.6.4
 ENV TRILINOS_DIR=/home/bob/libs/trilinos-12.4.2-Source
 
 RUN rm -rf ~/candi ~/libs/tmp
-
-
-
-
