@@ -3,87 +3,132 @@ FROM dealii/dealii-base-system
 MAINTAINER luca.heltai@gmail.com
 # based on work by Rene Gassmoeller and Timo Heister
 
-ENV HOME /root
-WORKDIR /root
-
-# Set the locale
-# this is required so that ASPECT can format numbers with , separators
-RUN locale-gen en_US.UTF-8  
-ENV LANG en_US.UTF-8  
-ENV LANGUAGE en_US:en  
-ENV LC_ALL en_US.UTF-8
-
-RUN apt-get update && apt-get -yq install gcc \
-    g++ \
-    gfortran \
-    libblas-dev \
-    liblapack-dev \
-    libopenmpi-dev \
-    openmpi-bin \
-    cmake \
-    git \
-    wget \
-    python \
-    numdiff \
-    ninja-build
+# The base system already contains everything that is needed.
+USER dealii
+ENV HOME /home/dealii
+WORKDIR $HOME
 
 #Build p4est
-ENV P4EST_VERSION 0.3.4.2
+ENV P4EST_VERSION 1.1
 RUN wget http://p4est.github.io/release/p4est-$P4EST_VERSION.tar.gz && \
     wget http://www.dealii.org/developer/external-libs/p4est-setup.sh && \
     chmod +x p4est-setup.sh && \
     ./p4est-setup.sh p4est-$P4EST_VERSION.tar.gz ~/libs/p4est-$P4EST_VERSION && \
     rm -rf p4est-build p4est-$P4EST_VERSION p4est-setup.sh p4est-$P4EST_VERSION.tar.gz
+ENV P4EST_DIR $HOME/libs/p4est-$P4EST_VERSION 
 
 #Build HDF5
-ENV HDF_VERSION 1.8.16
-RUN wget http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-$HDF_VERSION.tar.bz2 && \
-    tar xjf hdf5-$HDF_VERSION.tar.bz2 && \
-    cd hdf5-$HDF_VERSION &&  \
+ENV HDF5_VERSION 1.8.16
+RUN wget http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-$HDF5_VERSION.tar.bz2 && \
+    tar xjf hdf5-$HDF5_VERSION.tar.bz2 && \
+    cd hdf5-$HDF5_VERSION &&  \
     ./configure --enable-parallel \
                 --enable-shared \
-                --prefix=$HOME/libs/hdf5/ && \
+                --prefix=$HOME/libs/hdf5-$HDF5_VERSION/ && \
     make -j2 && make install && \
     cd $HOME && \
-    rm -rf hdf5-$HDF_VERSION hdf5-$HDF_VERSION.tar.bz2 
+    rm -rf hdf5-$HDF5_VERSION hdf5-$HDF5_VERSION.tar.bz2 
+ENV HDF5_DIR $HOME/libs/hdf5-$HDF5_VERSION
 
 #Build Trilinos
-ENV TRILINOS_VERSION 11.8.1
-RUN wget http://trilinos.sandia.gov/download/files/trilinos-$TRILINOS_VERSION-Source.tar.bz2 && \
-    tar xjf trilinos-$TRILINOS_VERSION-Source.tar.bz2 && \
-    mkdir trilinos-$TRILINOS_VERSION-Source/build && \
-    cd trilinos-$TRILINOS_VERSION-Source/build && \
-    cmake -D Trilinos_ENABLE_Sacado=ON \
-          -D Trilinos_ENABLE_Stratimikos=ON \
-          -D CMAKE_BUILD_TYPE=RELEASE \
-          -D CMAKE_CXX_FLAGS="-O3" \
-          -D CMAKE_C_FLAGS="-O3" \
-          -D CMAKE_FORTRAN_FLAGS="-O5" \
-          -D Trilinos_EXTRA_LINK_FLAGS="-lgfortran" \
-          -D CMAKE_VERBOSE_MAKEFILE=FALSE \
-          -D Trilinos_VERBOSE_CONFIGURE=FALSE \
-          -D TPL_ENABLE_MPI=ON \
-          -D BUILD_SHARED_LIBS=ON \
-          -D CMAKE_INSTALL_PREFIX:PATH=$HOME/libs/trilinos-$TRILINOS_VERSION \
-	  .. && \
-	  make -j4 && make install && \
-	  cd $HOME && \
-	  rm -rf trilinos-$TRILINOS_VERSION-Source trilinos-$TRILINOS_VERSION-Source.tar.bz2 
+ENV TRILINOS_VERSION 11-14-2
+RUN wget https://github.com/trilinos/Trilinos/archive/trilinos-release-$TRILINOS_VERSION.tar.gz && \
+    tar xfz trilinos-release-$TRILINOS_VERSION.tar.gz && \
+    mkdir Trilinos-trilinos-release-$TRILINOS_VERSION/build && \
+    cd Trilinos-trilinos-release-$TRILINOS_VERSION/build && \
+    cmake \
+     -D BUILD_SHARED_LIBS=ON \
+     -D CMAKE_BUILD_TYPE=RELEASE \
+     -D CMAKE_CXX_FLAGS="-O3" \
+     -D CMAKE_C_FLAGS="-O3" \
+     -D CMAKE_FORTRAN_FLAGS="-O5" \
+     -D CMAKE_INSTALL_PREFIX:PATH=$HOME/libs/trilinos-$TRILINOS_VERSION \
+     -D CMAKE_VERBOSE_MAKEFILE=FALSE \
+     -D TPL_ENABLE_Boost=OFF \
+     -D TPL_ENABLE_MPI=ON \
+     -D TPL_ENABLE_Netcdf:BOOL=OFF \
+     -D TrilinosFramework_ENABLE_MPI:BOOL=ON \
+     -D Trilinos_ASSERT_MISSING_PACKAGES:BOOL=OFF \
+     -D Trilinos_ENABLE_ALL_OPTIONAL_PACKAGES:BOOL=ON \
+     -D Trilinos_ENABLE_ALL_PACKAGES:BOOL=OFF \
+     -D Trilinos_ENABLE_Amesos:BOOL=ON \
+     -D Trilinos_ENABLE_AztecOO:BOOL=ON \
+     -D Trilinos_ENABLE_Epetra:BOOL=ON \
+     -D Trilinos_ENABLE_EpetraExt:BOOL=ON \
+     -D Trilinos_ENABLE_Ifpack:BOOL=ON \
+     -D Trilinos_ENABLE_Jpetra:BOOL=ON \
+     -D Trilinos_ENABLE_Kokkos:BOOL=ON \
+     -D Trilinos_ENABLE_Komplex:BOOL=ON \
+     -D Trilinos_ENABLE_ML:BOOL=ON \
+     -D Trilinos_ENABLE_MOOCHO:BOOL=ON \
+     -D Trilinos_ENABLE_MueLu:BOOL=ON \
+     -D Trilinos_ENABLE_OpenMP:BOOL=OFF \
+     -D Trilinos_ENABLE_Piro:BOOL=ON \
+     -D Trilinos_ENABLE_Rythmos:BOOL=ON \
+     -D Trilinos_ENABLE_STK:BOOL=OFF \
+     -D Trilinos_ENABLE_Sacado=ON \
+     -D Trilinos_ENABLE_TESTS:BOOL=OFF \
+     -D Trilinos_ENABLE_Stratimikos=ON \
+     -D Trilinos_ENABLE_Teuchos:BOOL=ON \
+     -D Trilinos_ENABLE_Thyra:BOOL=ON \
+     -D Trilinos_ENABLE_Tpetra:BOOL=ON \
+     -D Trilinos_ENABLE_TrilinosCouplings:BOOL=ON \
+     -D Trilinos_EXTRA_LINK_FLAGS="-lgfortran" \
+     -D Trilinos_VERBOSE_CONFIGURE=FALSE \
+     .. && \
+   make && make install && \
+   cd $HOME && \
+   rm -rf Trilinos-trilinos-release-* &&\
+   rm -rf trilinos-release-*
+ENV TRILINOS_DIR $HOME/libs/trilinos-$TRILINOS_VERSION
 
 #petsc
-ENV PETSC_VERSION 3.4.5
-RUN cd libs && wget http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-lite-$PETSC_VERSION.tar.gz && \
+ENV PETSC_VERSION 3.6.3
+RUN wget http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-lite-$PETSC_VERSION.tar.gz && \
     tar xf petsc-lite-$PETSC_VERSION.tar.gz && rm -f petsc-lite-$PETSC_VERSION.tar.gz && \
     cd petsc-$PETSC_VERSION && \
-    export PETSC_DIR=`pwd` && \
-    ./configure --download-scalapack=1 --download-mumps=1 --download-metis --download-parmetis --download-f-blas-lapack=1 \
-    			  --with-shared-libraries=1 --with-clanguage=C++ --download-hypre=1  --with-x=0 --with-debugging=1 \
-    			  COPTFLAGS='-O3' FOPTFLAGS='-O3' && \
-    make all
+    ./configure \
+	--download-fblaslapack=1 \
+	--download-hypre=1  \
+	--download-scalapack=1 \
+	--download-mumps=1 \
+	--download-metis \
+	--download-parmetis \
+	--download-superlu \
+	--download-superlu_dist \
+	--prefix=$HOME/libs/petsc-$PETSC_VERSION \
+	--with-clanguage=C++ \
+	--with-debugging=1 \
+    	--with-shared-libraries=1 \
+	--with-x=0 \
+    	COPTFLAGS='-O3' FOPTFLAGS='-O3' && \
+    make PETSC_DIR=`pwd` PETSC_ARC=docker all &&\
+    make PETSC_DIR=`pwd` PETSC_ARC=docker install && \
+    make PETSC_DIR=$HOME/libs/petsc-$PETSC_VERSION PETSC_ARCH= test && \
+    cd && rm -rf petsc-$PETSC_VERSION
+
+ENV PETSC_DIR $HOME/libs/petsc-$PETSC_VERSION
+ENV METIS_DIR $PETSC_DIR
+ENV SCALAPACK_DIR $PETSC_DIR
+ENV PARMETIS_DIR $PETSC_DIR
+ENV SUPERLU_DIR $PETSC_DIR
+ENV SUPERLU_DIST_DIR $PETSC_DIR
+ENV MUMPS_DIR $PETSC_DIR
+
+#slepc
+ENV SLEPC_VERSION 3.6.2
+RUN wget http://slepc.upv.es/download/download.php?filename=slepc-$SLEPC_VERSION.tar.gz \
+    -O slepc-$SLEPC_VERSION.tar.gz && \
+    tar xfz slepc-$SLEPC_VERSION.tar.gz && rm -f slepc-$SLEPC_VERSION.rag.gz && \
+    cd slepc-$SLEPC_VERSION && \
+    ./configure --prefix=$HOME/libs/slepc-$SLEPC_VERSION && \
+    make SLEPC_DIR=`pwd` && make SLEPC_DIR=`pwd` install && \
+    cd && rm -rf slepc-$SLEPC_VERSION*
+
+ENV SLEPC_DIR $HOME/libs/slepc-$SLEPC_VERSION    
 
 #sundials
 ENV SUNDIALS_VERSION 2.6.2
-ENV SUNDIALS_DIR $HOME/libs/sundials-$SUNDIALS_VERSION
 RUN wget https://github.com/luca-heltai/sundials/archive/v$SUNDIALS_VERSION.tar.gz &&\
     tar xf v$SUNDIALS_VERSION.tar.gz && rm -f v$SUNDIALS_VERSION.tar.gz && \
     cd sundials-$SUNDIALS_VERSION && \
@@ -96,3 +141,20 @@ RUN wget https://github.com/luca-heltai/sundials/archive/v$SUNDIALS_VERSION.tar.
     cd $HOME && \
     rm -rf sundials-$SUNDIALS_VERSION
     
+ENV SUNDIALS_DIR $HOME/libs/sundials-$SUNDIALS_VERSION
+
+#assimp
+USER root
+RUN apt-get install -y libassimp-dev assimp-utils
+USER dealii 
+ENV ASSIMP_DIR /usr
+
+#oce
+USER root
+RUN apt-get install -y \
+    liboce-foundation-dev \
+    liboce-foundation8 \
+    liboce-modeling-dev \
+    liboce-modeling8
+USER dealii
+ENV OPENCASCADE_DIR /usr

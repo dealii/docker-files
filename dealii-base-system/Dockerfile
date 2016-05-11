@@ -22,7 +22,8 @@ RUN apt-get update && apt-get -yq install \
     numdiff \
     openmpi-bin \
     python \
-    wget
+    wget \
+    vim
 
 # Install the right version of astyle as root
 RUN \
