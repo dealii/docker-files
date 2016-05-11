@@ -1,12 +1,12 @@
-FROM dealii/dealii-base-system
+FROM heltai/dealii-base-system
 
 MAINTAINER luca.heltai@gmail.com
 # based on work by Rene Gassmoeller and Timo Heister
 
 # The base system already contains everything that is needed.
-USER dealii
 ENV HOME /home/dealii
 WORKDIR $HOME
+USER dealii
 
 #Build p4est
 ENV P4EST_VERSION 1.1
@@ -30,8 +30,25 @@ RUN wget http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-$HDF5_VERSION.tar.bz2
     rm -rf hdf5-$HDF5_VERSION hdf5-$HDF5_VERSION.tar.bz2 
 ENV HDF5_DIR $HOME/libs/hdf5-$HDF5_VERSION
 
+#sundials
+ENV SUNDIALS_VERSION 2.6.2
+RUN wget https://github.com/luca-heltai/sundials/archive/v$SUNDIALS_VERSION.tar.gz &&\
+    tar xf v$SUNDIALS_VERSION.tar.gz && rm -f v$SUNDIALS_VERSION.tar.gz && \
+    cd sundials-$SUNDIALS_VERSION && \
+    mkdir build && cd build && \
+    cmake \
+	-DCMAKE_INSTALL_PREFIX=$HOME/libs/sundials-$SUNDIALS_VERSION \
+	-DLAPACK_ENABLE=ON \
+	-DMPI_ENABLE=ON .. && \
+    make -j4 && make install && \
+    cd $HOME && \
+    rm -rf sundials-$SUNDIALS_VERSION
+    
+ENV SUNDIALS_DIR $HOME/libs/sundials-$SUNDIALS_VERSION
+
+
 #Build Trilinos
-ENV TRILINOS_VERSION 11-14-2
+ENV TRILINOS_VERSION 12-6-3
 RUN wget https://github.com/trilinos/Trilinos/archive/trilinos-release-$TRILINOS_VERSION.tar.gz && \
     tar xfz trilinos-release-$TRILINOS_VERSION.tar.gz && \
     mkdir Trilinos-trilinos-release-$TRILINOS_VERSION/build && \
@@ -76,7 +93,7 @@ RUN wget https://github.com/trilinos/Trilinos/archive/trilinos-release-$TRILINOS
      -D Trilinos_EXTRA_LINK_FLAGS="-lgfortran" \
      -D Trilinos_VERBOSE_CONFIGURE=FALSE \
      .. && \
-   make && make install && \
+   make -j4 && make install && \
    cd $HOME && \
    rm -rf Trilinos-trilinos-release-* &&\
    rm -rf trilinos-release-*
@@ -127,34 +144,31 @@ RUN wget http://slepc.upv.es/download/download.php?filename=slepc-$SLEPC_VERSION
 
 ENV SLEPC_DIR $HOME/libs/slepc-$SLEPC_VERSION    
 
-#sundials
-ENV SUNDIALS_VERSION 2.6.2
-RUN wget https://github.com/luca-heltai/sundials/archive/v$SUNDIALS_VERSION.tar.gz &&\
-    tar xf v$SUNDIALS_VERSION.tar.gz && rm -f v$SUNDIALS_VERSION.tar.gz && \
-    cd sundials-$SUNDIALS_VERSION && \
+#oce
+ENV OCE_VERSION 0.17.1
+RUN \
+    wget https://github.com/tpaviot/oce/archive/OCE-$OCE_VERSION.tar.gz &&\
+    tar xf OCE-$OCE_VERSION.tar.gz && rm -f OCE-$OCE_VERSION.tar.gz && \
+    cd oce-OCE-$OCE_VERSION && \
     mkdir build && cd build && \
     cmake \
-	-DCMAKE_INSTALL_PREFIX=$HOME/libs/sundials-$SUNDIALS_VERSION \
-	-DLAPACK_ENABLE=ON \
-	-DMPI_ENABLE=ON .. && \
+    -DOCE_INSTALL_PREFIX=$HOME/libs/oce-$OCE_VERSION \
+    -DOCE_BUILD_SHARED_LIB:BOOL=ON \
+    -DOCE_DATAEXCHANGE:BOOL=ON \
+    -DOCE_DISABLE_X11:BOOL=ON \
+    -DOCE_DRAW:BOOL=OFF \
+    -DOCE_MODEL:BOOL=ON \
+    -DOCE_MULTITHREAD_LIBRARY:STRING=NONE \
+    -DOCE_OCAF:BOOL=ON \
+    -DOCE_OSX_USE_COCOA:BOOL=ON \
+    -DOCE_USE_TCL_TEST_FRAMEWORK:BOOL=OFF \
+    -DOCE_VISUALISATION:BOOL=OFF \
+    -DOCE_WITH_FREEIMAGE:BOOL=OFF \
+    -DOCE_WITH_GL2PS:BOOL=OFF \
+    -DOCE_WITH_OPENCL:BOOL=OFF \
+    .. && \
     make -j4 && make install && \
-    cd $HOME && \
-    rm -rf sundials-$SUNDIALS_VERSION
-    
-ENV SUNDIALS_DIR $HOME/libs/sundials-$SUNDIALS_VERSION
+    cd ../.. && rm -rf oce-*
 
-#assimp
-USER root
-RUN apt-get install -y libassimp-dev assimp-utils
-USER dealii 
-ENV ASSIMP_DIR /usr
-
-#oce
-USER root
-RUN apt-get install -y \
-    liboce-foundation-dev \
-    liboce-foundation8 \
-    liboce-modeling-dev \
-    liboce-modeling8
-USER dealii
-ENV OPENCASCADE_DIR /usr
+ENV OPENCASCADE_DIR $HOME/libs/oce-$OCE_VERSION
+ENV OCE_DIR $HOME/libs/oce-$OCE_VERSION
