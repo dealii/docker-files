@@ -1,23 +1,24 @@
-FROM dealii/dealii-base-system
+FROM heltai/dealii-base-system
 
 MAINTAINER luca.heltai@gmail.com
-# based on work by Rene Gassmoeller and Timo Heister
+# based on work by Timo Heister and Rene Gassmoeller
+
+# Unzip
+USER root
+RUN apt-get install -y unzip
+USER dealii
 
 # deal.II repo
-RUN mkdir $HOME/deal.II && cd $HOME/deal.II && \
-    git clone https://github.com/dealii/dealii.git
-
-#build
-RUN cd deal.II && \
+ENV DEAL_II_ORIG 372f54d
+RUN wget https://github.com/dealii/dealii/archive/master.zip &&\
+    unzip master.zip && cd dealii-master &&\
     mkdir build && cd build && \
-    cmake -DDEAL_II_COMPONENT_EXAMPLES=OFF \
-	   -DCMAKE_INSTALL_PREFIX=~/deal.II/installed \
-          -DCMAKE_BUILD_TYPE=Debug \
-          ../dealii && \
-    make -j4 && make install && \
-    cd .. && rm -rf build
+    cmake -GNinja \
+	  -DDEAL_II_WITH_MPI=ON \
+	  -DCMAKE_BUILD_TYPE=Debug \
+	  -DCMAKE_INSTALL_PREFIX=$HOME/libs/dealii-master \
+          .. && \
+    ninja -j1 && ninja install && \
+    cd $HOME && rm -rf dealii-master && rm -f master.zip
 
-ENV DEAL_II_DIR ~/deal.II/installed
-
-# && make clean 
-
+ENV DEAL_II_DIR ~/libs/dealii-master
