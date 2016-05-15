@@ -42,5 +42,6 @@ ENV PARMETIS_DIR=/home/bob/libs/parmetis-4.0.3
 ENV PETSC_DIR=/home/bob/libs/petsc-3.6.4
 ENV SLEPC_DIR=/home/bob/libs/slepc-3.6.0
 ENV TRILINOS_DIR=/home/bob/libs/trilinos-12.4.2-Source
+ENV P4EST_DIR=/home/bob/libs/p4est-1.1
 
 RUN rm -rf ~/candi ~/libs/tmp
