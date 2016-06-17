@@ -9,7 +9,7 @@ RUN apt-get install -y unzip
 USER dealii
 
 # deal.II repo
-ENV DEAL_II_ORIG 372f54d
+ENV DEAL_II_ORIG a57fc66
 RUN wget https://github.com/dealii/dealii/archive/master.zip &&\
     unzip master.zip && cd dealii-master &&\
     mkdir build && cd build && \

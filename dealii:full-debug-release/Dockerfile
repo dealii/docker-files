@@ -1,4 +1,4 @@
-FROM heltai/dealii-base-system
+FROM heltai/dealii-external-libraries
 
 MAINTAINER luca.heltai@gmail.com
 # based on work by Timo Heister and Rene Gassmoeller
@@ -9,13 +9,13 @@ RUN apt-get install -y unzip
 USER dealii
 
 # deal.II repo
-ENV DEAL_II_ORIG 372f54d
+ENV DEAL_II_ORIG a57fc66
 RUN wget https://github.com/dealii/dealii/archive/master.zip &&\
     unzip master.zip && cd dealii-master &&\
     mkdir build && cd build && \
     cmake -GNinja \
 	  -DDEAL_II_WITH_MPI=ON \
-	  -DCMAKE_BUILD_TYPE=Debug \
+	  -DCMAKE_BUILD_TYPE=DebugRelease \
 	  -DCMAKE_INSTALL_PREFIX=$HOME/libs/dealii-master \
           .. && \
     ninja -j1 && ninja install && \
