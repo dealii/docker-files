@@ -1,4 +1,4 @@
-FROM tjhei/dealii-full-deps
+FROM dealii/base
 
 MAINTAINER timo.heister@gmail.com
 
@@ -14,14 +14,12 @@ RUN cd deal.II/dealii && \
 # now build and install
 RUN cd deal.II && \
     mkdir build && cd build && \
-    cmake -DDEAL_II_WITH_MPI=ON \
+    cmake -DDEAL_II_WITH_MPI=OFF \
           -DDEAL_II_COMPONENT_EXAMPLES=OFF \
           -DCMAKE_INSTALL_PREFIX=~/deal.II/installed-$VER \
           -DCMAKE_BUILD_TYPE=Debug \
           ../dealii && \
-    make -j4 && \
-    make install && \
-    make test && \
+    make -j4 && make install && \
     cd .. && rm -rf build
 
 ENV DEAL_II_DIR ~/deal.II/installed-$VER
