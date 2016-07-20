@@ -1,0 +1,33 @@
+sudo: required
+
+env:
+  - BUILD_TAG=bare   BUILD_TYPE=Debug         TAG_NAME=bare-debug
+  - BUILD_TAG=bare   BUILD_TYPE=Release       TAG_NAME=bare-release
+  - BUILD_TAG=bare   BUILD_TYPE=DebugRelease  TAG_NAME=bare-debug-release
+
+  - BUILD_TAG=candi  BUILD_TYPE=Debug         TAG_NAME=candi-debug
+  - BUILD_TAG=candi  BUILD_TYPE=Release       TAG_NAME=bare-release
+  - BUILD_TAG=candi  BUILD_TYPE=DebugRelease  TAG_NAME=bare-debug-release
+
+  - BUILD_TAG=manual BUILD_TYPE=Debug         TAG_NAME=candi-debug
+  - BUILD_TAG=manual BUILD_TYPE=Release       TAG_NAME=bare-release
+  - BUILD_TAG=manual BUILD_TYPE=DebugRelease  TAG_NAME=bare-debug-release
+
+services:
+  - docker
+
+before_install:
+  - sudo apt-get update
+  - sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confnew" install docker-engine
+  - docker build -t dealii/dealii:$TAG_NAME --no-cache --build-arg BUILD_TYPE=$BUILD_TYPE dealii/$BUILD_TAG; 
+
+script:
+  - echo "Built dealii/dealii:$TAG_NAME docker image."
+
+after_success:
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+      if [ -d dealii/$TAG_NAME ]; then
+         docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+         docker push dealii/dealii:$TAG_NAME
+      fi
+    fi
