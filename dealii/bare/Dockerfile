@@ -19,8 +19,9 @@ RUN cd deal.II && \
           -DDEAL_II_COMPONENT_EXAMPLES=OFF \
           -DCMAKE_INSTALL_PREFIX=~/deal.II/installed-$VER \
           -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
+          -GNinja \
           ../dealii && \
-    make -j4 && make install && \
+    ninja install && \
     cd .. && rm -rf build
 
 ENV DEAL_II_DIR ~/deal.II/installed-$VER

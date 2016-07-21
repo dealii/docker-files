@@ -3,15 +3,15 @@ sudo: required
 env:
   - BUILD_TAG=bare   BUILD_TYPE=Debug         TAG_NAME=bare-debug
   - BUILD_TAG=bare   BUILD_TYPE=Release       TAG_NAME=bare-release
-  - BUILD_TAG=bare   BUILD_TYPE=DebugRelease  TAG_NAME=bare-debug-release
+#  - BUILD_TAG=bare   BUILD_TYPE=DebugRelease  TAG_NAME=bare-debug-release
 
   - BUILD_TAG=candi  BUILD_TYPE=Debug         TAG_NAME=candi-debug
-  - BUILD_TAG=candi  BUILD_TYPE=Release       TAG_NAME=bare-release
-  - BUILD_TAG=candi  BUILD_TYPE=DebugRelease  TAG_NAME=bare-debug-release
+  - BUILD_TAG=candi  BUILD_TYPE=Release       TAG_NAME=candi-release
+#  - BUILD_TAG=candi  BUILD_TYPE=DebugRelease  TAG_NAME=bare-debug-release
 
-  - BUILD_TAG=manual BUILD_TYPE=Debug         TAG_NAME=candi-debug
-  - BUILD_TAG=manual BUILD_TYPE=Release       TAG_NAME=bare-release
-  - BUILD_TAG=manual BUILD_TYPE=DebugRelease  TAG_NAME=bare-debug-release
+  - BUILD_TAG=manual BUILD_TYPE=Debug         TAG_NAME=manual-debug
+  - BUILD_TAG=manual BUILD_TYPE=Release       TAG_NAME=manual-release
+#  - BUILD_TAG=manual BUILD_TYPE=DebugRelease  TAG_NAME=manual-debug-release
 
 services:
   - docker
