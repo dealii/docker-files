@@ -4,7 +4,7 @@
 
 Started from @tjhei, edited by @luca-heltai
 
-To each directory in this repository, one (or more) images are built either on dockerhub, or on travis. 
+For each directory in this repository, one (or more) images are built either on dockerhub, or on travis. 
 
 In particular
 
@@ -12,16 +12,16 @@ In particular
 - base
 
 contain the startup OS and a minimal set of packages to compile serial builds. Both images are built
-on dockerhub:
+automatically on dockerhub:
 
 - https://hub.docker.com/r/dealii/ubuntu14/
 - https://hub.docker.com/r/dealii/base/
 
-The directory full-deps contain docker images to download and install all external dependencies
+The directory full-deps contain docker images that download and install all external dependencies
 for deal.II, using two possible different methods:
 
-- candi
-- manual
+- candi (gcc based)
+- manual (clang based)
 
 The building of these images is very expensive, and it is done manually, when important updates
 are available on the external libraries.
@@ -34,20 +34,20 @@ based on the type of base system that is used to bootstrap the build:
 - candi
 - manual
 
-And for each of these, build types *Debug*, *Release*, or *DebugRelease* are built, with the final
-images stored in
+And for each of these, build types *Debug*, *Release*, or *DebugRelease* versions of the library are 
+built, with the final images stored in
 
-- bare-debug
-- bare-debug-release
-- bare-release
-- candi-debug
+- dealii/dealii:bare-debug
+- dealii/dealii:bare-debug-release
+- dealii/dealii:bare-release
+- dealii/dealii:candi-debug
 - ...
 
 You can pull any of the above image from dockerhub using (for example)
 
     docker pull dealii/dealii:candi-debug
 
-and you can run an interactive shell in it:
+or you could run an interactive shell in it:
 
     docker run -i -t dealii/dealii:candi-debug
 
