@@ -3,6 +3,35 @@ FROM dealii/base
 MAINTAINER luca.heltai@gmail.com
 # based on work by Rene Gassmoeller and Timo Heister
 
+# Set the locale, so that it's possible to format numbers with , sep
+RUN locale-gen en_US.UTF-8  
+ENV LANG en_US.UTF-8  
+ENV LANGUAGE en_US:en  
+ENV LC_ALL en_US.UTF-8
+
+RUN apt-get update && apt-get -yq install \
+    assimp-utils \
+    bzip2 \
+    clang \
+    gsl-bin \
+    libassimp-dev \
+    libgsl0-dev \
+    liblapack-dev \
+    libopenmpi-dev \
+    libtbb2 \
+    libtbb-dev \
+    libsuitesparse-dev \
+    openmpi-bin \
+    python 
+
+# Make open mpi use clang
+ENV OMPI_CC clang
+ENV OMPI_CXX clang++
+ENV CC mpicc
+ENV CXX mpicxx
+ENV FC mpif90
+ENV FF mpif77
+
 # The base system already contains everything that is needed.
 ENV HOME /home/$USER
 WORKDIR $HOME
