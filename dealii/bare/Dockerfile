@@ -1,4 +1,4 @@
-FROM dealii/base
+FROM dealii/base:clang-serial
 
 MAINTAINER timo.heister@gmail.com
 
