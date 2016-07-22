@@ -1,38 +1,7 @@
-FROM dealii/base
+FROM dealii/base:clang-mpi
 
 MAINTAINER luca.heltai@gmail.com
 # based on work by Rene Gassmoeller and Timo Heister
-
-# Set the locale, so that it's possible to format numbers with , sep
-RUN locale-gen en_US.UTF-8  
-ENV LANG en_US.UTF-8  
-ENV LANGUAGE en_US:en  
-ENV LC_ALL en_US.UTF-8
-
-USER root
-
-RUN apt-get update && apt-get -yq install \
-    assimp-utils \
-    bzip2 \
-    clang \
-    gsl-bin \
-    libassimp-dev \
-    libgsl0-dev \
-    liblapack-dev \
-    libopenmpi-dev \
-    libtbb2 \
-    libtbb-dev \
-    libsuitesparse-dev \
-    openmpi-bin \
-    python 
-
-# Make open mpi use clang
-ENV OMPI_CC clang
-ENV OMPI_CXX clang++
-ENV CC mpicc
-ENV CXX mpicxx
-ENV FC mpif90
-ENV FF mpif77
 
 # The base system already contains everything that is needed.
 ENV HOME /home/$USER
@@ -60,23 +29,6 @@ RUN wget http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-$HDF5_VERSION.tar.bz2
     cd $HOME && \
     rm -rf hdf5-$HDF5_VERSION hdf5-$HDF5_VERSION.tar.bz2 
 ENV HDF5_DIR $HOME/libs/hdf5-$HDF5_VERSION
-
-#sundials
-ENV SUNDIALS_VERSION 2.6.2
-RUN wget https://github.com/luca-heltai/sundials/archive/v$SUNDIALS_VERSION.tar.gz &&\
-    tar xf v$SUNDIALS_VERSION.tar.gz && rm -f v$SUNDIALS_VERSION.tar.gz && \
-    cd sundials-$SUNDIALS_VERSION && \
-    mkdir build && cd build && \
-    cmake \
-	-DCMAKE_INSTALL_PREFIX=$HOME/libs/sundials-$SUNDIALS_VERSION \
-	-DLAPACK_ENABLE=ON \
-	-DMPI_ENABLE=ON .. && \
-    make -j4 && make install && \
-    cd $HOME && \
-    rm -rf sundials-$SUNDIALS_VERSION
-    
-ENV SUNDIALS_DIR $HOME/libs/sundials-$SUNDIALS_VERSION
-
 
 #Build Trilinos
 ENV TRILINOS_VERSION 12-6-3

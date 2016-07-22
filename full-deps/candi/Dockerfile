@@ -1,31 +1,11 @@
-FROM dealii/base
+FROM dealii/base:clang-mpi
 
 MAINTAINER timo.heister@gmail.com
 
-USER root
-RUN apt-get update && sudo apt-get -yq install \
-    gcc \
-    clang \
-    g++ \
-    gfortran \
-    libblas-dev \
-    liblapack-dev \
-    libopenmpi-dev \
-    openmpi-bin \
-    cmake \
-    git \
-    wget \
-    python \
-    numdiff \
-    ninja-build
-
 USER $USER
 
-USER root
 RUN mkdir candi
 ADD candi/ $HOME/candi/
-RUN chown -R $USER:$USER $HOME/candi/
-USER $USER
 
 RUN \
   cd candi && \
