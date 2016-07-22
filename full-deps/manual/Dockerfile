@@ -9,6 +9,8 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en  
 ENV LC_ALL en_US.UTF-8
 
+USER root
+
 RUN apt-get update && apt-get -yq install \
     assimp-utils \
     bzip2 \
@@ -47,7 +49,7 @@ RUN wget http://p4est.github.io/release/p4est-$P4EST_VERSION.tar.gz && \
 ENV P4EST_DIR $HOME/libs/p4est-$P4EST_VERSION 
 
 #Build HDF5
-ENV HDF5_VERSION 1.8.16
+ENV HDF5_VERSION 1.8.17
 RUN wget http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-$HDF5_VERSION.tar.bz2 && \
     tar xjf hdf5-$HDF5_VERSION.tar.bz2 && \
     cd hdf5-$HDF5_VERSION &&  \
