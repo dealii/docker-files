@@ -67,6 +67,3 @@ push-%: locks/%
 
 all: push-base push-full-deps push-dealii
 	@echo "Pushing all."
-
-clean: 
-	@rm -v locks/*
