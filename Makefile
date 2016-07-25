@@ -7,6 +7,8 @@ BUILDS=debug release debug-release
 # DOCKER_BUILD=docker build --no-cache
 DOCKER_BUILD=docker build
 
+.SECONDARY:
+
 locks/full-deps-bare:
 	# this is only necessary to ensure compatibility of the Makefile
 	touch $@
