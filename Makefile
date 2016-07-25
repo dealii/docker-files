@@ -1,6 +1,6 @@
 REPO=dealii
 FULL_DEPS=candi manual bare
-BASE=gcc-serial clang-mpi clang-serial
+BASE=gcc-serial gcc-mpi clang-serial clang-mpi
 BUILDS=debug release debug-release
 
 # Use no-cache option to force rebuild

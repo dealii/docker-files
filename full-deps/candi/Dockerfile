@@ -1,4 +1,4 @@
-FROM dealii/base:clang-mpi
+FROM dealii/base:gcc-mpi
 
 MAINTAINER timo.heister@gmail.com
 
