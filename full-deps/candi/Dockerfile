@@ -2,10 +2,10 @@ FROM dealii/base:gcc-mpi
 
 MAINTAINER timo.heister@gmail.com
 
-USER $USER
-
-RUN mkdir candi
+USER root
 ADD candi/ $HOME/candi/
+RUN chown -R $USER:$USER $HOME/candi/
+USER $USER
 
 RUN \
   cd candi && \
