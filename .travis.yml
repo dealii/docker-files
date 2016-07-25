@@ -11,8 +11,8 @@ env:
   - BUILD_TAG=bare   BUILD_TYPE=Release       TAG_NAME=bare-release
 #  - BUILD_TAG=bare   BUILD_TYPE=DebugRelease  TAG_NAME=bare-debug-release
 
-  - BUILD_TAG=candi  BUILD_TYPE=Debug         TAG_NAME=candi-debug
-  - BUILD_TAG=candi  BUILD_TYPE=Release       TAG_NAME=candi-release
+#  - BUILD_TAG=candi  BUILD_TYPE=Debug         TAG_NAME=candi-debug
+#  - BUILD_TAG=candi  BUILD_TYPE=Release       TAG_NAME=candi-release
 #  - BUILD_TAG=candi  BUILD_TYPE=DebugRelease  TAG_NAME=bare-debug-release
 
   - BUILD_TAG=manual BUILD_TYPE=Debug         TAG_NAME=manual-debug
