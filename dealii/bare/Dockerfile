@@ -8,7 +8,6 @@ ARG BUILD_TYPE=Debug
 ARG KEEP_SOURCE=false
 
 RUN git clone https://github.com/dealii/dealii.git dealii-$VER-src && \
-    mkdir dealii-$VER-src && \
     cd dealii-$VER-src && \
     git checkout $VER && \
     mkdir build && cd build && \
