@@ -11,8 +11,7 @@ RUN git clone https://github.com/dealii/dealii.git dealii-$VER-src && \
     cd dealii-$VER-src && \
     git checkout $VER && \
     mkdir build && cd build && \
-    cmake -DDEAL_II_WITH_MPI=ON \
-          -DDEAL_II_COMPONENT_EXAMPLES=OFF \
+    cmake -DDEAL_II_COMPONENT_EXAMPLES=OFF \
           -DCMAKE_INSTALL_PREFIX=~/dealii-$VER \
           -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
 	  -GNinja \
