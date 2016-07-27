@@ -7,17 +7,17 @@ language: cpp
 
 env:
 # All commented images take too long to build on Travis, making them less useful
-  - BUILD_TAG=bare   BUILD_TYPE=Debug         TAG_NAME=bare-debug
-  - BUILD_TAG=bare   BUILD_TYPE=Release       TAG_NAME=bare-release
-#  - BUILD_TAG=bare   BUILD_TYPE=DebugRelease  TAG_NAME=bare-debug-release
+  - BUILD_TAG=bare   BUILD_TYPE=Debug         TAG_NAME=bare-debug            KEEP_SOURCE=true
+  - BUILD_TAG=bare   BUILD_TYPE=Release       TAG_NAME=bare-release          KEEP_SOURCE=false
+#  - BUILD_TAG=bare   BUILD_TYPE=DebugRelease  TAG_NAME=bare-debug-release   KEEP_SOURCE=true
 
-#  - BUILD_TAG=candi  BUILD_TYPE=Debug         TAG_NAME=candi-debug
-#  - BUILD_TAG=candi  BUILD_TYPE=Release       TAG_NAME=candi-release
-#  - BUILD_TAG=candi  BUILD_TYPE=DebugRelease  TAG_NAME=bare-debug-release
+#  - BUILD_TAG=candi  BUILD_TYPE=Debug         TAG_NAME=candi-debug          KEEP_SOURCE=true
+#  - BUILD_TAG=candi  BUILD_TYPE=Release       TAG_NAME=candi-release        KEEP_SOURCE=false
+#  - BUILD_TAG=candi  BUILD_TYPE=DebugRelease  TAG_NAME=bare-debug-release   KEEP_SOURCE=true
 
-  - BUILD_TAG=manual BUILD_TYPE=Debug         TAG_NAME=manual-debug
-  - BUILD_TAG=manual BUILD_TYPE=Release       TAG_NAME=manual-release
-#  - BUILD_TAG=manual BUILD_TYPE=DebugRelease  TAG_NAME=manual-debug-release
+  - BUILD_TAG=manual BUILD_TYPE=Debug         TAG_NAME=manual-debug          KEEP_SOURCE=true
+  - BUILD_TAG=manual BUILD_TYPE=Release       TAG_NAME=manual-release        KEEP_SOURCE=false
+#  - BUILD_TAG=manual BUILD_TYPE=DebugRelease  TAG_NAME=manual-debug-release KEEP_SOURCE=true
 
 services:
   - docker
@@ -25,7 +25,7 @@ services:
 before_install:
   - sudo apt-get update
   - sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confnew" install docker-engine
-  - docker build -t dealii/dealii:$TAG_NAME --no-cache --build-arg BUILD_TYPE=$BUILD_TYPE dealii/$BUILD_TAG; 
+  - docker build -t dealii/dealii:$TAG_NAME --no-cache --build-arg BUILD_TYPE=$BUILD_TYPE --build-arg KEEP_SOURCE=$KEEP_SOURCE dealii/$BUILD_TAG; 
 
 script:
   - echo "Built dealii/dealii:$TAG_NAME docker image."
