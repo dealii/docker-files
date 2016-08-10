@@ -1,0 +1,39 @@
+sudo: required
+
+notifications:
+  email: false
+
+language: cpp 
+
+env:
+# All commented images take too long to build on Travis, making them less useful
+  - BUILD_TAG=bare   BUILD_TYPE=Debug         TAG_NAME=bare-debug            KEEP_SOURCE=true
+  - BUILD_TAG=bare   BUILD_TYPE=Release       TAG_NAME=bare-release          KEEP_SOURCE=false
+#  - BUILD_TAG=bare   BUILD_TYPE=DebugRelease  TAG_NAME=bare-debug-release   KEEP_SOURCE=true
+
+#  - BUILD_TAG=candi  BUILD_TYPE=Debug         TAG_NAME=candi-debug          KEEP_SOURCE=true
+#  - BUILD_TAG=candi  BUILD_TYPE=Release       TAG_NAME=candi-release        KEEP_SOURCE=false
+#  - BUILD_TAG=candi  BUILD_TYPE=DebugRelease  TAG_NAME=bare-debug-release   KEEP_SOURCE=true
+
+  - BUILD_TAG=manual BUILD_TYPE=Debug         TAG_NAME=manual-debug          KEEP_SOURCE=true
+  - BUILD_TAG=manual BUILD_TYPE=Release       TAG_NAME=manual-release        KEEP_SOURCE=false
+#  - BUILD_TAG=manual BUILD_TYPE=DebugRelease  TAG_NAME=manual-debug-release KEEP_SOURCE=true
+
+services:
+  - docker
+
+before_install:
+  - sudo apt-get update
+  - sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confnew" install docker-engine
+  - docker build -t dealii/dealii:$TAG_NAME --no-cache --build-arg BUILD_TYPE=$BUILD_TYPE --build-arg KEEP_SOURCE=$KEEP_SOURCE dealii/$BUILD_TAG; 
+
+script:
+  - echo "Built dealii/dealii:$TAG_NAME docker image."
+
+after_success:
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+      if [ -d dealii/$TAG_NAME ]; then
+         docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+         docker push dealii/dealii:$TAG_NAME
+      fi
+    fi

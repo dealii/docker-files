@@ -1,19 +1,20 @@
-FROM tjhei/ubuntu14
+FROM dealii/ubuntu14
 
 MAINTAINER timo.heister@gmail.com
 
 USER root
 RUN apt-get update && sudo apt-get -yq install \
-    gcc \
+    cmake \
     g++ \
+    gcc \
     gfortran \
+    git \
     libblas-dev \
     liblapack-dev \
-    cmake \
-    git \
-    wget \
+    ninja-build \
     numdiff \
-    ninja-build
+    unzip \
+    wget 
 
 RUN \
     wget http://sourceforge.net/projects/astyle/files/astyle/astyle%202.04/astyle_2.04_linux.tar.gz && \
@@ -24,5 +25,4 @@ RUN \
     cd - && \
     rm -rf astyle*
 
-USER bob
-
+USER $USER
