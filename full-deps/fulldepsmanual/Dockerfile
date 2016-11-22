@@ -1,4 +1,4 @@
-FROM dealii/base:clang-mpi
+FROM dealii/base:gcc-mpi
 
 MAINTAINER luca.heltai@gmail.com
 # based on work by Rene Gassmoeller and Timo Heister
@@ -18,7 +18,7 @@ RUN wget http://p4est.github.io/release/p4est-$P4EST_VERSION.tar.gz && \
 ENV P4EST_DIR $HOME/libs/p4est-$P4EST_VERSION 
 
 #Build HDF5
-ENV HDF5_VERSION 1.8.17
+ENV HDF5_VERSION 1.10.0-patch1
 RUN wget http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-$HDF5_VERSION.tar.bz2 && \
     tar xjf hdf5-$HDF5_VERSION.tar.bz2 && \
     cd hdf5-$HDF5_VERSION &&  \
@@ -31,7 +31,7 @@ RUN wget http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-$HDF5_VERSION.tar.bz2
 ENV HDF5_DIR $HOME/libs/hdf5-$HDF5_VERSION
 
 #Build Trilinos
-ENV TRILINOS_VERSION 12-6-3
+ENV TRILINOS_VERSION 12-8-1
 RUN wget https://github.com/trilinos/Trilinos/archive/trilinos-release-$TRILINOS_VERSION.tar.gz && \
     tar xfz trilinos-release-$TRILINOS_VERSION.tar.gz && \
     mkdir Trilinos-trilinos-release-$TRILINOS_VERSION/build && \
@@ -83,15 +83,15 @@ RUN wget https://github.com/trilinos/Trilinos/archive/trilinos-release-$TRILINOS
 ENV TRILINOS_DIR $HOME/libs/trilinos-$TRILINOS_VERSION
 
 #petsc
-ENV PETSC_VERSION 3.6.3
+ENV PETSC_VERSION 3.7.4
 RUN wget http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-lite-$PETSC_VERSION.tar.gz && \
     tar xf petsc-lite-$PETSC_VERSION.tar.gz && rm -f petsc-lite-$PETSC_VERSION.tar.gz && \
     cd petsc-$PETSC_VERSION && \
     ./configure \
-	--download-fblaslapack=1 \
+	--download-fblaslapack \
 	--download-hypre=1  \
-	--download-scalapack=1 \
-	--download-mumps=1 \
+	--download-scalapack \
+	--download-mumps \
 	--download-metis \
 	--download-parmetis \
 	--download-superlu \
@@ -116,7 +116,7 @@ ENV SUPERLU_DIST_DIR $PETSC_DIR
 ENV MUMPS_DIR $PETSC_DIR
 
 #slepc
-ENV SLEPC_VERSION 3.6.2
+ENV SLEPC_VERSION 3.7.3
 RUN wget http://slepc.upv.es/download/download.php?filename=slepc-$SLEPC_VERSION.tar.gz \
     -O slepc-$SLEPC_VERSION.tar.gz && \
     tar xfz slepc-$SLEPC_VERSION.tar.gz && rm -f slepc-$SLEPC_VERSION.rag.gz && \
@@ -128,7 +128,7 @@ RUN wget http://slepc.upv.es/download/download.php?filename=slepc-$SLEPC_VERSION
 ENV SLEPC_DIR $HOME/libs/slepc-$SLEPC_VERSION    
 
 #oce
-ENV OCE_VERSION 0.17.1
+ENV OCE_VERSION 0.17.2
 RUN \
     wget https://github.com/tpaviot/oce/archive/OCE-$OCE_VERSION.tar.gz &&\
     tar xf OCE-$OCE_VERSION.tar.gz && rm -f OCE-$OCE_VERSION.tar.gz && \
