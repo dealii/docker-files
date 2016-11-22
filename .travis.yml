@@ -28,7 +28,8 @@ script:
   - echo "Built dealii/dealii:$BUILD_VER-$BUILD_DEP-$BUILD_TYPE docker image."
 
 after_success:
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+  - >
+    if [ "$TRAVIS_BRANCH" == "master" ]; then
         docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
         docker push dealii/dealii:$BUILD_VER-$BUILD_DEP-$BUILD_TYPE
-    fi
+    fi;
