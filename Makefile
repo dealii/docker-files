@@ -1,7 +1,7 @@
 REPO=dealii
 
-RELEASES=v8.4.2 v8.5.pre.3
-DEPS=gcc-mpi-fulldepscandi clang-mpi-fulldepsmanual gcc-serial-bare
+RELEASES=v8.4.2
+DEPS=gcc-mpi-fulldepsmanual gcc-serial-bare
 BUILDS=debug release debugrelease
 
 # General name is of the type $REPO/dealii:version-compiler-serialormpi-depstype-buildtype
@@ -26,17 +26,7 @@ keep_s   = $(if $(findstring debug,$(call build,$1)),true,false)
 
 .SECONDARY:
 
-
-locks/test-%: 
-	@echo String: $*
-	@echo ver     = $(call ver, $*)
-	@echo compiler= $(call compiler, $*)
-	@echo deps    = $(call deps, $*)
-	@echo build   = $(call build, $*)
-	@echo build_c = $(call build_c, $*)
-	@echo keep_s  = $(call keep_s, $*)
-	@echo sec     = $(call sec, $*, 2,4)
-
+# Base systems
 locks/base-gcc-mpi: locks/base-gcc-serial
 	$(DOCKER_BUILD) -t $(REPO)/base:gcc-mpi base/gcc-mpi
 	touch $@
@@ -64,7 +54,6 @@ full-deps: $(foreach dep, $(DEPS), locks/full-deps-$(call sec,$(dep),3,3))
 	@echo "Built $?"
 
 # Deal.II systems
-.SECONDEXPANSION: 
 locks/dealii-%: 
 	make locks/full-deps-$(call deps,$*)
 	$(DOCKER_BUILD) -t $(REPO)/dealii:$* \
