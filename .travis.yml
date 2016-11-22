@@ -23,7 +23,7 @@ before_install:
   - sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confnew" install docker-engine
   # These images are built externally, not on Travis. Assume they are available.
   - touch locks/base-clang-mpi locks/full-deps-fulldepsmanual locks/base-gcc-serial
-  make RELEASES=$BUILD_VER DEPS=$BUILD_DEP BUILDS=$BUILD_TYPE dealii 
+  - make RELEASES=$BUILD_VER DEPS=$BUILD_DEP BUILDS=$BUILD_TYPE dealii 
 script:
   - echo "Built dealii/dealii:$BUILD_VER-$BUILD_DEP-$BUILD_TYPE docker image."
 
