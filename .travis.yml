@@ -7,8 +7,8 @@ language: cpp
 
 env:
 # All commented images take too long to build on Travis, making them less useful
-  - BUILD_VER=master BUILD_TYPE=release  	BUILD_DEP=clang-mpi-fulldepsmanual
-  - BUILD_VER=master BUILD_TYPE=debug    	BUILD_DEP=clang-mpi-fulldepsmanual
+# - BUILD_VER=master BUILD_TYPE=release  	BUILD_DEP=clang-mpi-fulldepsmanual
+# - BUILD_VER=master BUILD_TYPE=debug    	BUILD_DEP=clang-mpi-fulldepsmanual
 # - BUILD_VER=master BUILD_TYPE=debugrelease    BUILD_DEP=clang-mpi-fulldepsmanual
 
   - BUILD_VER=master BUILD_TYPE=debug    	BUILD_DEP=gcc-serial-bare
@@ -29,8 +29,6 @@ script:
 
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
-      if [ -d dealii/$TAG_NAME ]; then
-         docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-         docker push dealii/dealii:$BUILD_VER-$BUILD_DEP-$BUILD_TYPE
-      fi
+        docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+        docker push dealii/dealii:$BUILD_VER-$BUILD_DEP-$BUILD_TYPE
     fi
