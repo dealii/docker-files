@@ -49,6 +49,8 @@ after which you could run an interactive shell in it:
 
 This will drop you in an isolated environment where you can experiment with deal.II. 
 
+A list of all available images is here: https://hub.docker.com/r/dealii/dealii/tags/
+
 Notice that if a debug build is present in the image, then you'll also have access to 
 deal.II source files. 
 
