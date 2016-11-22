@@ -65,8 +65,8 @@ full-deps: $(foreach dep, $(DEPS), locks/full-deps-$(call sec,$(dep),3,3))
 
 # Deal.II systems
 .SECONDEXPANSION: 
-
-locks/dealii-%: dealii/$(call deps,$$*)/Dockerfile locks/full-deps-$(call deps,$$*)
+locks/dealii-%: 
+	make locks/full-deps-$(call deps,$*)
 	$(DOCKER_BUILD) -t $(REPO)/dealii:$* \
 			--build-arg VER=$(call ver,$*) \
 			--build-arg BUILD_TYPE=$(call build_c,$*) \
