@@ -1,4 +1,4 @@
-FROM dealii/full-deps:manual
+FROM dealii/full-deps:fulldepsmanual
 
 MAINTAINER luca.heltai@gmail.com
 

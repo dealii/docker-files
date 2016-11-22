@@ -1,7 +1,7 @@
 REPO=dealii
 
 RELEASES=v8.4.2
-DEPS=gcc-mpi-fulldepsmanual gcc-serial-bare
+DEPS=gcc-mpi-fulldepsmanual clang-serial-bare
 BUILDS=debug release debugrelease
 
 # General name is of the type $REPO/dealii:version-compiler-serialormpi-depstype-buildtype
