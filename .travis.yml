@@ -7,13 +7,13 @@ language: cpp
 
 env:
 # All commented images take too long to build on Travis, making them less useful
- - BUILD_VER=master BUILD_TYPE=release  	BUILD_DEP=gcc-mpi-fulldepsmanual
- - BUILD_VER=master BUILD_TYPE=debug    	BUILD_DEP=gcc-mpi-fulldepsmanual
-# - BUILD_VER=master BUILD_TYPE=debugrelease    BUILD_DEP=clang-mpi-fulldepsmanual
+  - BUILD_VER=master  BUILD_TYPE=release         BUILD_DEP=gcc-mpi-fulldepsmanual
+  - BUILD_VER=master  BUILD_TYPE=debug           BUILD_DEP=gcc-mpi-fulldepsmanual
+# - BUILD_VER=master BUILD_TYPE=debugrelease    BUILD_DEP=gcc-mpi-fulldepsmanual
 
-  - BUILD_VER=master BUILD_TYPE=debug    	BUILD_DEP=clang-serial-bare
-  - BUILD_VER=master BUILD_TYPE=release  	BUILD_DEP=clang-serial-bare
-# - BUILD_VER=master BUILD_TYPE=debugrelease  	BUILD_DEP=gcc-serial-bare
+  - BUILD_VER=master BUILD_TYPE=debug           BUILD_DEP=clang-serial-bare
+  - BUILD_VER=master BUILD_TYPE=release         BUILD_DEP=clang-serial-bare
+# - BUILD_VER=master BUILD_TYPE=debugrelease  	BUILD_DEP=clang-serial-bare
 
 services:
   - docker
