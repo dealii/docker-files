@@ -156,3 +156,23 @@ RUN \
 ENV OPENCASCADE_DIR $HOME/libs/oce-$OCE_VERSION
 ENV OCE_DIR $HOME/libs/oce-$OCE_VERSION
 
+# Arpack
+ENV ARPACK_VERSION 3.4.0
+USER root
+RUN apt-get -yq install autoconf
+USER $USER
+
+RUN \
+    wget https://github.com/opencollab/arpack-ng/archive/$ARPACK_VERSION.tar.gz &&\
+    tar xf $ARPACK_VERSION.tar.gz && rm -f $ARPACK_VERSION.tar.gz &&\
+    cd arpack-ng-$ARPACK_VERSION && \
+    ./bootstrap && ./configure --prefix=$HOME/libs/arpack-$ARPACK_VERSION --enable-mpi && \
+    make -j4 install &&\
+    cd .. && rm -rf arpack-ng-* 
+
+ENV ARPACK_DIR $HOME/libs/arpack-$ARPACK_VERSION
+
+# gsl
+USER root
+RUN apt-get -yq install gsl-bin libgsl0-dev
+USER $USER
