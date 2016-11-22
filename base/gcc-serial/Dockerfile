@@ -1,14 +1,16 @@
-FROM dealii/ubuntu14
+FROM dealii/ubuntu16
 
 MAINTAINER timo.heister@gmail.com
 
 USER root
-RUN apt-get update && sudo apt-get -yq install \
+RUN apt-get update && apt-get -yq install \
+    bzip2 \
     cmake \
     g++ \
     gcc \
     gfortran \
     git \
+    gsl-bin \
     libblas-dev \
     liblapack-dev \
     ninja-build \

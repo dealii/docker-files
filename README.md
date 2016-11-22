@@ -8,20 +8,20 @@ For each directory in this repository, one (or more) images are built either on 
 
 In particular
 
-- ubuntu14
+- ubuntu16
 - base
 
 contain the startup OS and a minimal set of packages to compile serial builds. Both images are built
 automatically on dockerhub:
 
-- https://hub.docker.com/r/dealii/ubuntu14/
+- https://hub.docker.com/r/dealii/ubuntu16/
 - https://hub.docker.com/r/dealii/base/
 
 The directory full-deps contain docker images that download and install all external dependencies
 for deal.II, using two possible different methods:
 
-- candi (gcc based)
-- manual (clang based)
+- fulldepscandi  (gcc based)
+- fulldepsmanual (clang based)
 
 The building of these images is very expensive, and it is done manually, when important updates
 are available on the external libraries.
@@ -31,24 +31,25 @@ in particular we build several different types of deal.II images, each on its ow
 based on the type of base system that is used to bootstrap the build:
 
 - bare
-- candi
-- manual
+- fulldepscandi
+- fulldepsmanual
 
 And for each of these, build types *Debug*, *Release*, or *DebugRelease* versions of the library are 
 built, with the final images stored in
 
-- dealii/dealii:bare-debug
-- dealii/dealii:bare-debug-release
-- dealii/dealii:bare-release
-- dealii/dealii:candi-debug
-- ...
+- dealii/dealii:ver-compiler-serialormpi-depstype-buildtype
 
 You can pull any of the above image from dockerhub using (for example)
 
-    docker pull dealii/dealii:candi-debug
+    docker pull dealii/dealii:v8.4.2-clang-mpi-fulldepsmanual-debugrelease
 
-or you could run an interactive shell in it:
+after which you could run an interactive shell in it:
 
-    docker run -i -t dealii/dealii:candi-debug
+    docker run -i -t dealii/dealii:v8.4.2-clang-mpi-fulldepsmanual-debugrelease
 
 This will drop you in an isolated environment where you can experiment with deal.II. 
+
+Notice that if a debug build is present in the image, then you'll also have access to 
+deal.II source files. 
+
+All images are built by the user `dealii`.
