@@ -1,5 +1,5 @@
-FROM ubuntu:yakkety
-# this is ubuntu 16.10
+FROM ubuntu:xenial
+# this is ubuntu 16.04 LTS
 
 MAINTAINER luca.heltai@gmail.com
 
