@@ -1,8 +1,8 @@
 REPO=dealii
 
-RELEASES=v8.4.2
-DEPS=gcc-mpi-fulldepsmanual clang-serial-bare
-BUILDS=debug release debugrelease
+RELEASES=v8.5.0
+DEPS=gcc-mpi-fulldepsmanual gcc-mpi-fulldepscandi clang-serial-bare
+BUILDS=debugrelease
 
 # General name is of the type $REPO/dealii:version-compiler-serialormpi-depstype-buildtype
 # For example: dealii/dealii:v8.4.2-clang-mpi-fulldepsmanual-debug
@@ -22,7 +22,6 @@ compiler = $(call sec,$1,2,3)
 deps 	 = $(call sec,$1,4,4)
 build	 = $(call sec,$1,5,5)
 build_c	 = $(subst release,Release,$(subst debug,Debug,$(call build,$1)))
-keep_s   = $(if $(findstring debug,$(call build,$1)),true,false)
 
 .SECONDARY:
 
@@ -59,7 +58,6 @@ locks/dealii-%:
 	$(DOCKER_BUILD) -t $(REPO)/dealii:$* \
 			--build-arg VER=$(call ver,$*) \
 			--build-arg BUILD_TYPE=$(call build_c,$*) \
-			--build-arg KEEP_SOURCE=$(call keep_s,$*) \
 			dealii/$(call deps,$*)
 	touch $@
 
