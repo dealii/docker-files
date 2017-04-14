@@ -1,11 +1,10 @@
-FROM dealii/full-deps:candi
+FROM dealii/full-deps:fulldepscandi
 
 MAINTAINER luca.heltai@gmail.com
 
 # get deal.II repo
 ARG VER=master
-ARG BUILD_TYPE=Debug
-ARG KEEP_SOURCE=false
+ARG BUILD_TYPE=DebugRelease
 
 RUN git clone https://github.com/dealii/dealii.git dealii-$VER-src && \
     cd dealii-$VER-src && \
@@ -19,7 +18,7 @@ RUN git clone https://github.com/dealii/dealii.git dealii-$VER-src && \
           ../ && \
     ninja install && \
     ninja test && \
-    ($KEEP_SOURCE && cd .. && rm -rf build .git) || \
-    cd $HOME && rm -rf dealii-$VER-src
+    cp summary.log ~/dealii-$VER/summary.log &&\
+    cd .. && rm -rf build .git 
 
-ENV DEAL_II_DIR ~/dealii-$VER
+ENV DEAL_II_DIR $HOME/dealii-$VER
