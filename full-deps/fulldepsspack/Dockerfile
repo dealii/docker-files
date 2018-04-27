@@ -25,7 +25,7 @@ RUN        apt-get update \
            && rm -rf /var/lib/apt/lists/*
 
 # install spack
-RUN        curl -s -L https://api.github.com/repos/llnl/spack/tarball \
+RUN        curl -s -L https://api.github.com/repos/spack/spack/tarball \
            | tar xzC $SPACK_ROOT --strip 1
 RUN        echo ". $SPACK_ROOT/share/spack/setup-env.sh" \
            > /etc/profile.d/spack.sh
