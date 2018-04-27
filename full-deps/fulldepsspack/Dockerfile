@@ -12,16 +12,13 @@ ENV        DEBIAN_FRONTEND=noninteractive \
 # install minimal spack dependencies
 RUN        apt-get update \
            && apt-get install -y --no-install-recommends \
-              autoconf \
+              build-essential \
               ca-certificates \
               curl \
               environment-modules \
-              git \
-              build-essential \
 	      gfortran \
+              git \
               python \
-              nano \
-              unzip \
            && rm -rf /var/lib/apt/lists/*
 
 # install spack
@@ -33,7 +30,7 @@ RUN        echo ". $SPACK_ROOT/share/spack/setup-env.sh" \
 ADD 	   packages.yaml $SPACK_ROOT/etc/spack/packages.yaml
 
 # install software
-RUN 	   spack install -j12 --only=dependencies dealii@develop \
+RUN 	   spack install --only=dependencies dealii@develop \
 	   && spack clean -a
 
 # switch to normal user
