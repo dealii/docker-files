@@ -21,6 +21,8 @@ RUN        apt-get update \
               python \
            && rm -rf /var/lib/apt/lists/*
 
+ENV 	   DUMMY=1
+
 # install spack
 RUN        curl -s -L https://api.github.com/repos/spack/spack/tarball \
            | tar xzC $SPACK_ROOT --strip 1
@@ -32,6 +34,9 @@ ADD 	   packages.yaml $SPACK_ROOT/etc/spack/packages.yaml
 # install software
 RUN 	   spack install --only=dependencies dealii@develop \
 	   && spack clean -a
+
+RUN 	   spack install ninja numdiff astyle environment-modules \
+	   && spack clean -a 
 
 # switch to normal user
 USER       $USER

@@ -23,11 +23,11 @@ RUN cat ~/libs/configuration/* | grep export
 
 ENV ARPACK_DIR=$HOME/libs/arpack-ng-master
 ENV HDF5_DIR=$HOME/libs/hdf5-1.8.15-patch1
-ENV OPENCASCADE_DIR=$HOME/libs/oce-OCE-0.17
+ENV OPENCASCADE_DIR=$HOME/libs/oce.git
 ENV P4EST_DIR=$HOME/libs/p4est-2.0
 ENV METIS_DIR=$HOME/libs/parmetis-4.0.3
 ENV PARMETIS_DIR=$HOME/libs/parmetis-4.0.3
 ENV PETSC_DIR=$HOME/libs/petsc-3.6.4
 ENV SLEPC_DIR=$HOME/libs/slepc-3.6.0
-ENV SUPERLU_DIR=$HOME/libs/superlu_dist_5.1.2
+ENV SUPERLU_DIR=$HOME/libs/superlu_dist_5.1.2   
 ENV TRILINOS_DIR=$HOME/libs/trilinos-release-12-10-1
