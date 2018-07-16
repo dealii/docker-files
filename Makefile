@@ -2,6 +2,9 @@ REPO=dealii
 
 RELEASES=v9.0.0
 DEPS=gcc-mpi-fulldepscandi clang-mpi-base clang-serial-bare
+#DEPS=gcc-mpi-fulldepsspack clang-serial-bare
+DEPS=gcc-mpi-fulldepsspack
+#DEPS=clang-serial-bare
 BUILDS=debugrelease
 
 # General name is of the type $REPO/dealii:version-compiler-serialormpi-depstype-buildtype
@@ -9,7 +12,7 @@ BUILDS=debugrelease
 
 # Use no-cache option to force rebuild
 # DOCKER_BUILD=docker build --no-cache
-DOCKER_BUILD=docker build
+DOCKER_BUILD=docker build 
 
 # A literal space
 space :=
