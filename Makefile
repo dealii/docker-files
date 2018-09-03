@@ -1,6 +1,6 @@
 REPO=dealii
 
-RELEASES=v8.5.0
+RELEASES=v9.0.0
 DEPS=gcc-mpi-fulldepsmanual gcc-mpi-fulldepscandi clang-serial-bare
 BUILDS=debugrelease
 
