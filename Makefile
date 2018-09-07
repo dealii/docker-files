@@ -67,6 +67,13 @@ dealii: $(foreach ver, $(RELEASES), \
 	locks/dealii-$(ver)-$(dep)-$(build))))
 	@echo "Built $?"
 
+locks/indent:
+	$(DOCKER_BUILD) -t $(REPO)/indent indent/
+	touch $@
+
+indent: locks/indent indent/Dockerfile Makefile
+	@echo "Built $?"
+
 # Push stage: base
 push-base-%: locks/base-%
 	docker push $(REPO)/base:$*
@@ -94,7 +101,10 @@ push-dealii: $(foreach ver, $(RELEASES), \
         push-dealii-$(ver)-$(dep)-$(build))))
 	@echo "Push $?"
 
-push: push-base push-full-deps push-dealii
+push-indent:
+	docker push $(REPO)/indent
+
+push: push-base push-full-deps push-dealii push-indent
 	@echo "Pushing all."
 
 all: base full-deps dealii
