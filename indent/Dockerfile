@@ -1,4 +1,4 @@
-FROM tjhei/dealii-base
+FROM dealii/base:gcc-serial
 
 MAINTAINER timo.heister@gmail.com
 
@@ -8,4 +8,4 @@ RUN wget https://github.com/dealii/dealii/releases/download/v9.0.0/clang-format-
     && tar xfv clang* && cp clang-6/bin/clang-format /usr/local/bin/ \
     && rm -rf clang*
 
-USER bob
+USER dealii
