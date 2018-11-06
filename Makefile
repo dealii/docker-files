@@ -1,7 +1,7 @@
 REPO=dealii
 
-RELEASES=v8.5.0
-DEPS=gcc-mpi-fulldepsmanual gcc-mpi-fulldepscandi clang-serial-bare
+RELEASES=v8.5.1
+DEPS=gcc-mpi-fulldepscandi clang-mpi-base clang-serial-bare
 BUILDS=debugrelease
 
 # General name is of the type $REPO/dealii:version-compiler-serialormpi-depstype-buildtype
@@ -26,11 +26,11 @@ build_c	 = $(subst release,Release,$(subst debug,Debug,$(call build,$1)))
 .SECONDARY:
 
 # Base systems
-locks/base-gcc-mpi: locks/base-gcc-serial
+locks/base-gcc-mpi: locks/base-gcc-serial base/gcc-mpi/Dockerfile
 	$(DOCKER_BUILD) -t $(REPO)/base:gcc-mpi base/gcc-mpi
 	touch $@
 
-locks/base-clang-mpi: locks/base-clang-serial
+locks/base-clang-mpi: locks/base-clang-serial base/clang-mpi/Dockerfile
 	$(DOCKER_BUILD) -t $(REPO)/base:clang-mpi base/clang-mpi
 	touch $@
 
@@ -45,6 +45,7 @@ base: $(foreach base, $(DEPS), locks/base-$(call sec,$(base),1,2))
 locks/full-deps-bare:
 	# this is only necessary to ensure compatibility of the Makefile
 	touch $@
+
 locks/full-deps-%: full-deps/%/Dockerfile
 	$(DOCKER_BUILD) -t $(REPO)/full-deps:$* full-deps/$*
 	touch $@
