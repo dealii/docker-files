@@ -10,7 +10,7 @@ RUN apt-get update && apt-get -yq install \
     mpich \
     python
 
-# Make open mpi the default compiler
+# Select the default compiler
 ENV CC mpicc
 ENV CXX mpicxx
 ENV FC mpif90

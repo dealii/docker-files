@@ -9,7 +9,7 @@ RUN apt-get update && apt-get -yq install \
     libmpich-dev \
     mpich
 
-# Make open mpi use clang
+# Select default compilers and tell mpi to use clang
 ENV MPICH_CC clang
 ENV MPICH_CXX clang++
 ENV CC mpicc
