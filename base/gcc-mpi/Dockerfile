@@ -6,11 +6,11 @@ MAINTAINER luca.heltai@gmail.com
 USER root
 
 RUN apt-get update && apt-get -yq install \
-    libopenmpi-dev \
-    openmpi-bin \
+    libmpich-dev \
+    mpich \
     python
 
-# Make open mpi the default compiler
+# Select the default compiler
 ENV CC mpicc
 ENV CXX mpicxx
 ENV FC mpif90
