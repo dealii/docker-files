@@ -1,21 +1,3 @@
 packages:
-  all:
-    compiler: [gcc, clang]
-    providers:
-      mpi: [openmpi]
-      blas: [openblas]
-      lapack: [openblas]
-      scalapack: [netlib-scalapack]
-  suite-sparse:
-    variants: ~tbb
-  astyle:
-    version: [2.04]
-  boost:
-    variants: +thread+system+serialization+iostreams+mpi
-  petsc:
-    variants: +mumps
-  dealii:
-    version: [develop]
-    variants: ~doc+optflags+adol-c+nanoflann+sundials+assimp+gmsh~python+scalapack
-  gcc:
-    variants: languages=c,c++,fortran
+  hdf5:
+    variants: +fortran

@@ -1,4 +1,4 @@
-FROM 	   dealii/ubuntu16
+FROM 	   dealii/base:gcc-serial
 
 MAINTAINER luca.heltai@gmail.com
 
@@ -12,13 +12,10 @@ ENV        DEBIAN_FRONTEND=noninteractive \
 # install minimal spack dependencies
 RUN        apt-get update \
            && apt-get install -y --no-install-recommends \
-              build-essential \
               ca-certificates \
               curl \
               environment-modules \
-	      gfortran \
-              git \
-              python \
+	      python \
            && rm -rf /var/lib/apt/lists/*
 
 ENV 	   DUMMY=1
@@ -29,7 +26,11 @@ RUN        curl -s -L https://api.github.com/repos/spack/spack/tarball \
 RUN        echo ". $SPACK_ROOT/share/spack/setup-env.sh" \
            > /etc/profile.d/spack.sh
 
-ADD 	   extras/packages.yaml $SPACK_ROOT/etc/spack/packages.yaml
+# Make sure only one compiler is available
+RUN 	   spack compilers && spack compiler rm gcc@5.5.0
+
+# Make sure extras are ok
+ADD       extras/packages.yaml $SPACK_ROOT/etc/spack/packages.yaml
 
 # install software
 RUN 	   spack install --only=dependencies dealii@develop \
@@ -37,6 +38,9 @@ RUN 	   spack install --only=dependencies dealii@develop \
 
 RUN 	   spack install ninja numdiff environment-modules \
 	   && spack clean -a 
+
+# Make sure modules are well built
+ADD       extras/modules $SPACK_ROOT/etc/spack/modules.yaml
 
 # switch to normal user
 USER       $USER
