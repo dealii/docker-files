@@ -18,10 +18,11 @@ automatically on dockerhub:
 - https://hub.docker.com/r/dealii/base/
 
 The directory full-deps contain docker images that download and install all external dependencies
-for deal.II, using two possible different methods:
+for deal.II, using different methods:
 
-- fulldepscandi  (gcc based)
-- fulldepsmanual (clang based)
+- fulldepscandi  
+- fulldepsmanual 
+- fulldepsspack
 
 The building of these images is very expensive, and it is done manually, when important updates
 are available on the external libraries.
@@ -33,6 +34,7 @@ based on the type of base system that is used to bootstrap the build:
 - bare
 - fulldepscandi
 - fulldepsmanual
+- fulldepsspack
 
 And for each of these, build types *Debug*, *Release*, or *DebugRelease* versions of the library are 
 built, with the final images stored in
@@ -50,8 +52,5 @@ after which you could run an interactive shell in it:
 This will drop you in an isolated environment where you can experiment with deal.II. 
 
 A list of all available images is here: https://hub.docker.com/r/dealii/dealii/tags/
-
-Notice that if a debug build is present in the image, then you'll also have access to 
-deal.II source files. 
 
 All images are built by the user `dealii`.
