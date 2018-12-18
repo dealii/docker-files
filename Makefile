@@ -75,12 +75,15 @@ locks/indent:
 indent: locks/indent indent/Dockerfile Makefile
 	@echo "Built $?"
 
-tags: $(foreach ver, $(RELEASES), \
+tag-%:  locks/dealii-%
+	docker tag $(REPO)/dealii:$* $(REPO)/dealii:master-$(call sec,$*,2,6) ;\
+	docker push $(REPO)/dealii:master-$(call sec,$*,2,6) ;\
+
+tags:   $(foreach ver, $(RELEASES), \
 	$(foreach dep, $(DEPS), \
 	$(foreach build, $(BUILDS), \
-	locks/dealii-$(ver)-$(dep)-$(build))))
-	docker tag $(REPO)/dealii:$(call sec,$?,2,6) $(REPO)/dealii:master-$(call sec,$?,3,6)
-	docker push $(REPO)/dealii:master-$(call sec,$?,3,6)
+	tag-$(ver)-$(dep)-$(build))))
+	@echo "Tagging $?"
 
 # Push stage: base
 push-base-%: locks/base-%
