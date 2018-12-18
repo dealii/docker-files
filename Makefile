@@ -2,9 +2,11 @@ REPO=dealii
 
 RELEASES=v9.0.0
 DEPS=gcc-mpi-fulldepscandi clang-mpi-base clang-serial-bare
+RELEASES=28fa42f
 #DEPS=gcc-mpi-fulldepsspack clang-serial-bare
-DEPS=gcc-mpi-fulldepsspack
-#DEPS=clang-serial-bare
+#DEPS=gcc-mpi-fulldepsspack
+DEPS=gcc-serial-bare
+DEPS=clang-serial-bare gcc-serial-bare
 BUILDS=debugrelease
 
 # General name is of the type $REPO/dealii:version-compiler-serialormpi-depstype-buildtype
@@ -28,17 +30,12 @@ build_c	 = $(subst release,Release,$(subst debug,Debug,$(call build,$1)))
 
 .SECONDARY:
 
-# Base systems
-locks/base-gcc-mpi: locks/base-gcc-serial base/gcc-mpi/Dockerfile
-	$(DOCKER_BUILD) -t $(REPO)/base:gcc-mpi base/gcc-mpi
+locks/base-%-mpi: locks/base-%-serial
+	$(DOCKER_BUILD) -t $(REPO)/base:%-mpi base -f base/Dockerfile.%-mpi
 	touch $@
 
-locks/base-clang-mpi: locks/base-clang-serial base/clang-mpi/Dockerfile
-	$(DOCKER_BUILD) -t $(REPO)/base:clang-mpi base/clang-mpi
-	touch $@
-
-locks/base-%: base/%/Dockerfile
-	$(DOCKER_BUILD) -t $(REPO)/base:$* base/$*
+locks/base-%: base/Dockerfile.%
+	$(DOCKER_BUILD) -t $(REPO)/base:$* base -f base/Dockerfile.$*
 	touch $@
 
 base: $(foreach base, $(DEPS), locks/base-$(call sec,$(base),1,2))
@@ -49,8 +46,8 @@ locks/full-deps-bare:
 	# this is only necessary to ensure compatibility of the Makefile
 	touch $@
 
-locks/full-deps-%: full-deps/%/Dockerfile
-	$(DOCKER_BUILD) -t $(REPO)/full-deps:$* full-deps/$*
+locks/full-deps-%: full-deps/Dockerfile.gcc-mpi-% locks/base-gcc-mpi
+	$(DOCKER_BUILD) -t $(REPO)/full-deps:$* full-deps -f full-deps/Dockerfile.$*
 	touch $@
 
 full-deps: $(foreach dep, $(DEPS), locks/full-deps-$(call sec,$(dep),3,3))
@@ -62,7 +59,7 @@ locks/dealii-%:
 	$(DOCKER_BUILD) -t $(REPO)/dealii:$* \
 			--build-arg VER=$(call ver,$*) \
 			--build-arg BUILD_TYPE=$(call build_c,$*) \
-			dealii/$(call deps,$*)
+			dealii -f dealii/Dockerfile.$(call compiler,$*)-$(call deps, $*)
 	touch $@
 
 dealii: $(foreach ver, $(RELEASES), \
@@ -77,6 +74,13 @@ locks/indent:
 
 indent: locks/indent indent/Dockerfile Makefile
 	@echo "Built $?"
+
+tags: $(foreach ver, $(RELEASES), \
+	$(foreach dep, $(DEPS), \
+	$(foreach build, $(BUILDS), \
+	locks/dealii-$(ver)-$(dep)-$(build))))
+	docker tag $(REPO)/dealii:$(call sec,$?,2,6) $(REPO)/dealii:master-$(call sec,$?,3,6)
+	docker push $(REPO)/dealii:master-$(call sec,$?,3,6)
 
 # Push stage: base
 push-base-%: locks/base-%

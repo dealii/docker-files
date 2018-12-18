@@ -29,13 +29,13 @@ RUN        curl -s -L https://api.github.com/repos/spack/spack/tarball \
 RUN        echo ". $SPACK_ROOT/share/spack/setup-env.sh" \
            > /etc/profile.d/spack.sh
 
-ADD 	   packages.yaml $SPACK_ROOT/etc/spack/packages.yaml
+ADD 	   extras/packages.yaml $SPACK_ROOT/etc/spack/packages.yaml
 
 # install software
 RUN 	   spack install --only=dependencies dealii@develop \
 	   && spack clean -a
 
-RUN 	   spack install ninja numdiff astyle environment-modules \
+RUN 	   spack install ninja numdiff environment-modules \
 	   && spack clean -a 
 
 # switch to normal user

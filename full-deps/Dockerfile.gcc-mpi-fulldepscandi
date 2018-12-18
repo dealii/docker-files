@@ -3,10 +3,11 @@ FROM dealii/base:gcc-mpi
 MAINTAINER timo.heister@gmail.com
 
 USER root
+
 RUN apt-get update && apt-get -yq install \
     gmsh
 
-ADD candi/ $HOME/candi/
+ADD ./extras/candi/ $HOME/candi/
 RUN chown -R $USER:$USER $HOME/candi/
 USER $USER
 

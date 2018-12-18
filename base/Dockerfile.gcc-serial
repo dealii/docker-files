@@ -1,0 +1,30 @@
+FROM dealii/ubuntu16
+
+MAINTAINER timo.heister@gmail.com
+
+USER root
+
+RUN apt-get update && \
+    apt-get -yq --no-install-recommends install software-properties-common && \
+    add-apt-repository ppa:ubuntu-toolchain-r/test &&  \
+    apt-get update && \
+    apt-get -yq install --no-install-recommends \
+    bzip2 \
+    cmake \
+    g++-8 \
+    gcc-8 \
+    gfortran-8 \
+    git \
+    libblas-dev \
+    libbz2-dev \
+    liblapack-dev \
+    ninja-build \
+    numdiff \
+    unzip \
+    wget \
+    zlib1g-dev && \
+    rm -rf /var/lib/apt/lists/* 
+
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 60 --slave /usr/bin/g++ g++ /usr/bin/g++-8 
+
+USER $USER
