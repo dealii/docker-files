@@ -6,12 +6,12 @@ MAINTAINER luca.heltai@gmail.com
 USER root
 
 RUN apt-get update && apt-get -yq install \
-    libopenmpi-dev \
-    openmpi-bin 
+    libmpich-dev \
+    mpich
 
-# Make open mpi use clang
-ENV OMPI_CC clang
-ENV OMPI_CXX clang++
+# Select default compilers and tell mpi to use clang
+ENV MPICH_CC clang
+ENV MPICH_CXX clang++
 ENV CC mpicc
 ENV CXX mpicxx
 ENV FC mpif90
