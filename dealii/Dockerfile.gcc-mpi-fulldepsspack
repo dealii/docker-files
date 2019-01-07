@@ -5,11 +5,14 @@ MAINTAINER luca.heltai@gmail.com
 # get deal.II repo
 USER       root
 
-ARG 	   VER=develop
-RUN        spack install dealii@$VER \
-           && spack clean -a
+ARG 	   VER=master
+ADD 	   install-dealii-spack.sh
+RUN        ./install-delaii-spack.sh $VER && rm install-dealii-spack.sh
 
 RUN        echo "spack load dealii ninja numdiff cmake openmpi" \
            >> /etc/profile.d/spack.sh
 
 USER 	   $USER
+
+ENTRYPOINT ["bash"]
+CMD ["-l"]
