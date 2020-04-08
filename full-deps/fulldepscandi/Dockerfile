@@ -1,6 +1,6 @@
 FROM dealii/base:gcc-mpi
 
-MAINTAINER timo.heister@gmail.com
+LABEL maintainer="timo.heister@gmail.com"
 
 USER root
 RUN apt-get update && apt-get -yq install \
