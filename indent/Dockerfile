@@ -1,6 +1,6 @@
 FROM dealii/base:gcc-serial
 
-MAINTAINER timo.heister@gmail.com
+LABEL maintainer="timo.heister@gmail.com"
 
 USER root
 

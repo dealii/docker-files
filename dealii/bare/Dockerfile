@@ -1,6 +1,6 @@
 FROM dealii/base:clang-serial
 
-MAINTAINER luca.heltai@gmail.com
+LABEL maintainer="luca.heltai@gmail.com"
 
 # get deal.II repo
 ARG VER=master

@@ -1,6 +1,6 @@
 FROM dealii/ubuntu16
 
-MAINTAINER timo.heister@gmail.com
+LABEL maintainer="timo.heister@gmail.com"
 
 USER root
 RUN apt-get update && apt-get -yq install \

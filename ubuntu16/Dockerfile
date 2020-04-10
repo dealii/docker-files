@@ -1,7 +1,7 @@
 FROM ubuntu:xenial
 # this is ubuntu 16.04 LTS
 
-MAINTAINER luca.heltai@gmail.com
+LABEL maintainer="luca.heltai@gmail.com"
 
 # Set the locale
 # this is required so that numbers can be formatted with , separators

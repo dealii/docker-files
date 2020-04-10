@@ -1,6 +1,6 @@
 FROM 	   dealii/ubuntu16
 
-MAINTAINER luca.heltai@gmail.com
+LABEL maintainer="luca.heltai@gmail.com"
 
 USER 	   root
 

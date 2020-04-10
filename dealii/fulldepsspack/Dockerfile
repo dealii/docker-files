@@ -1,6 +1,6 @@
 FROM dealii/full-deps:fulldepsspack
 
-MAINTAINER luca.heltai@gmail.com
+LABEL maintainer="luca.heltai@gmail.com"
 
 # get deal.II repo
 USER       root
