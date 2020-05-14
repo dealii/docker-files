@@ -2,17 +2,20 @@ FROM ubuntu:bionic
 
 LABEL maintainer="luca.heltai@gmail.com"
 
+ARG VERSION=9.1.1-2~ubuntu18.04.1~ppa1
+
 USER root
 RUN apt-get update && apt-get install -y software-properties-common \
     && add-apt-repository ppa:ginggs/deal.ii-backports \
     && apt-get update && apt-get install -y \
-    locales \
     git \
+    libdeal.ii-dev=$VERSION \
+    locales \
     ssh \
-    wget \
+    sudo \
     ninja-build \
     numdiff \
-    libdeal.ii-dev \
+    wget \
     && rm -rf /var/lib/apt/lists/* \
     && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 RUN locale-gen en_US.UTF-8  
