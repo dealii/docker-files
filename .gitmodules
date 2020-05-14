@@ -1,3 +1,0 @@
-[submodule "full-deps/fulldepscandi/candi"]
-	path = full-deps/fulldepscandi/candi
-	url = https://github.com/dealii/candi.git
