@@ -39,3 +39,4 @@ ENV HOME /home/$USER
 ENV USER $USER
 ENV OMPI_MCA_btl "^vader"
 WORKDIR $HOME
+
