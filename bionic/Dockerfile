@@ -2,11 +2,12 @@ FROM ubuntu:bionic
 
 LABEL maintainer="luca.heltai@gmail.com"
 
-ARG VERSION=9.1.1-2~ubuntu18.04.1~ppa1
+ARG VERSION=9.2.0-1~ubuntu18.04.1~ppa1
+ARG REPO=ppa:ginggs/deal.ii-9.2.0-backports
 
 USER root
 RUN apt-get update && apt-get install -y software-properties-common \
-    && add-apt-repository ppa:ginggs/deal.ii-backports \
+    && add-apt-repository $REPO \
     && apt-get update && apt-get install -y \
     git \
     libdeal.ii-dev=$VERSION \
