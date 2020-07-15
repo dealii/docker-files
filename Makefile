@@ -36,9 +36,16 @@ v9.2.0-bionic:
 		--build-arg REPO=ppa:ginggs/deal.ii-9.2.0-backports \
 		bionic
 	docker push dealii/dealii:v9.2.0-bionic
-	docker tag dealii/dealii:v9.2.0-bionic dealii/dealii:latest
+
+v9.2.0-focal:
+	$(DOCKER_BUILD) -t dealii/dealii:v9.2.0-focal \
+		--build-arg VERSION=9.2.0-1~ubuntu20.04.1~ppa1 \
+		--build-arg REPO=ppa:ginggs/deal.ii-9.2.0-backports \
+		focal
+	docker push dealii/dealii:v9.2.0-focal
+	docker tag dealii/dealii:v9.2.0-focal dealii/dealii:latest
 	docker push dealii/dealii:latest
 
-all: v9.1.1-bionic v9.2.0-bionic
+all: v9.1.1-bionic v9.2.0-bionic v9.2.0-focal
 
-.PHONY: all v9.1.1-bionic v9.2.0-bionic
+.PHONY: all v9.1.1-bionic v9.2.0-bionic v9.2.0-focal
