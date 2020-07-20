@@ -1,8 +1,8 @@
-FROM ubuntu:bionic
+FROM ubuntu:focal
 
 LABEL maintainer="luca.heltai@gmail.com"
 
-ARG VERSION=9.2.0-1~ubuntu18.04.1~ppa1
+ARG VERSION=9.2.0-1~ubuntu20.04.1~ppa1
 ARG REPO=ppa:ginggs/deal.ii-9.2.0-backports
 
 USER root

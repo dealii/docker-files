@@ -17,26 +17,35 @@
 # DOCKER_BUILD=docker build --no-cache
 DOCKER_BUILD=docker build
 
+# Repos:
+# ppa:ginggs/deal.ii-backports
+# ppa:ginggs/deal.ii-9.2.0-backports
+
 # Version 9.1.1
 v9.1.1-bionic:
 	$(DOCKER_BUILD) -t dealii/dealii:v9.1.1-bionic \
 		--build-arg VERSION=9.1.1-2~ubuntu18.04.1~ppa1 \
+		--build-arg REPO=ppa:ginggs/deal.ii-backports \
 		bionic
 	docker push dealii/dealii:v9.1.1-bionic
-	# Move the next two lines below 9.2 is updated
-	docker tag dealii/dealii:v9.1.1-bionic dealii/dealii:latest
+
+# Version 9.2.0 - Change to the correct package when it is available
+v9.2.0-bionic:
+	$(DOCKER_BUILD) -t dealii/dealii:v9.2.0-bionic \
+		--build-arg VERSION=9.2.0-1~ubuntu18.04.1~ppa1 \
+		--build-arg REPO=ppa:ginggs/deal.ii-9.2.0-backports \
+		bionic
+	docker push dealii/dealii:v9.2.0-bionic
+
+v9.2.0-focal:
+	$(DOCKER_BUILD) -t dealii/dealii:v9.2.0-focal \
+		--build-arg VERSION=9.2.0-1~ubuntu20.04.1~ppa1 \
+		--build-arg REPO=ppa:ginggs/deal.ii-9.2.0-backports \
+		focal
+	docker push dealii/dealii:v9.2.0-focal
+	docker tag dealii/dealii:v9.2.0-focal dealii/dealii:latest
 	docker push dealii/dealii:latest
 
-# # Version 9.2.0 - Change to the correct package when it is available
-# v9.2.0-bionic:
-#	IMG=dealii/dealii:v9.2.0-bionic 
-#	$(DOCKER_BUILD) -t $(IMG) \
-#		--build-arg VERSION=9.2.0-1~ubuntu18.04.1~ppa1 \
-#		bionic
-#	docker push $(IMG)
-#	docker tag $(IMG) dealii/dealii:latest
-#	docker push dealii/dealii:latest
+all: v9.1.1-bionic v9.2.0-bionic v9.2.0-focal
 
-all: v9.1.1-bionic
-
-.PHONY: all v9.1.1-bionic
+.PHONY: all v9.1.1-bionic v9.2.0-bionic v9.2.0-focal
