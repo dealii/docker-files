@@ -46,6 +46,14 @@ v9.2.0-focal:
 	docker tag dealii/dealii:v9.2.0-focal dealii/dealii:latest
 	docker push dealii/dealii:latest
 
-all: v9.1.1-bionic v9.2.0-bionic v9.2.0-focal
+dependencies-focal:
+	$(DOCKER_BUILD) -t dealii/dependencies:focal \
+		--build-arg VERSION=9.2.0-1~ubuntu20.04.1~ppa1 \
+		--build-arg REPO=ppa:ginggs/deal.ii-9.2.0-backports \
+		dependencies-focal
+	docker tag dealii/dependencies:focal dealii/dependencies:latest
+	docker push dealii/dependencies:latest
 
-.PHONY: all v9.1.1-bionic v9.2.0-bionic v9.2.0-focal
+all: v9.1.1-bionic v9.2.0-bionic v9.2.0-focal dependencies-focal
+
+.PHONY: all v9.1.1-bionic v9.2.0-bionic v9.2.0-focal dependencies-focal
