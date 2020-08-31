@@ -10,12 +10,16 @@ RUN apt-get update && apt-get install -y software-properties-common \
     && add-apt-repository $REPO \
     && apt-get update && apt-get install -y \
     git \
+    googletest \
+    libboost-python-dev \
     libdeal.ii-dev=$VERSION \
     locales \
-    ssh \
-    sudo \
     ninja-build \
     numdiff \
+    python3-dev \
+    python3-pybind11 \
+    ssh \
+    sudo \
     wget \
     && apt-get remove -y libdeal.ii-dev=$VERSION \
     && rm -rf /var/lib/apt/lists/* \

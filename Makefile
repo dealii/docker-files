@@ -51,6 +51,7 @@ dependencies-focal:
 		--build-arg VERSION=9.2.0-1~ubuntu20.04.1~ppa1 \
 		--build-arg REPO=ppa:ginggs/deal.ii-9.2.0-backports \
 		dependencies-focal
+	docker push dealii/dependencies:focal
 	docker tag dealii/dependencies:focal dealii/dependencies:latest
 	docker push dealii/dependencies:latest
 
