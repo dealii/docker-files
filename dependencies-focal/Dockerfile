@@ -10,18 +10,23 @@ RUN apt-get update && apt-get install -y software-properties-common \
     && add-apt-repository $REPO \
     && apt-get update && apt-get install -y \
     git \
-    googletest \
+    libboost-log1.71-dev \
     libboost-python-dev \
     libdeal.ii-dev=$VERSION \
+    libgtest-dev \
     locales \
     ninja-build \
     numdiff \
     python3-dev \
+    python3-distutils \
+    python3-matplotlib \
     python3-pybind11 \
+    python3-scipy\
     ssh \
     sudo \
     wget \
     && apt-get remove -y libdeal.ii-dev=$VERSION \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 RUN locale-gen en_US.UTF-8  
