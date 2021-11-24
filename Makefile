@@ -41,20 +41,44 @@ v9.2.0-focal:
 	$(DOCKER_BUILD) -t dealii/dealii:v9.2.0-focal \
 		--build-arg VERSION=9.2.0-1~ubuntu20.04.1~ppa1 \
 		--build-arg REPO=ppa:ginggs/deal.ii-9.2.0-backports \
+		--build-arg CLANG_VERSION=6 \
+		--build-arg CLANG_REPO=https://github.com/dealii/dealii/releases/download/v9.0.0/ \
 		focal
 	docker push dealii/dealii:v9.2.0-focal
-	docker tag dealii/dealii:v9.2.0-focal dealii/dealii:latest
+
+v9.3.0-focal:
+	$(DOCKER_BUILD) -t dealii/dealii:v9.3.0-focal \
+		--build-arg VERSION=9.3.0-1~ubuntu20.04.1~ppa1 \
+		--build-arg REPO=ppa:ginggs/deal.ii-9.3.0-backports \
+		--build-arg CLANG_VERSION=11 \
+		--build-arg CLANG_REPO=https://github.com/dealii/dealii/releases/download/v9.3.0/ \
+		focal
+	docker push dealii/dealii:v9.3.0-focal
+	docker tag dealii/dealii:v9.3.0-focal dealii/dealii:latest
 	docker push dealii/dealii:latest
+
+dependencies-focal-v9.2.0:
+	$(DOCKER_BUILD) -t dealii/dependencies:focal-v9.2.0 \
+		--build-arg VERSION=9.2.0-1~ubuntu20.04.1~ppa1 \
+		--build-arg REPO=ppa:ginggs/deal.ii-9.2.0-backports \
+		--build-arg CLANG_VERSION=6 \
+		--build-arg CLANG_REPO=https://github.com/dealii/dealii/releases/download/v9.0.0/ \
+		dependencies-focal
+	docker push dealii/dependencies:focal-v9.2.0
 
 dependencies-focal:
 	$(DOCKER_BUILD) -t dealii/dependencies:focal \
-		--build-arg VERSION=9.2.0-1~ubuntu20.04.1~ppa1 \
-		--build-arg REPO=ppa:ginggs/deal.ii-9.2.0-backports \
+		--build-arg VERSION=9.3.0-1~ubuntu20.04.1~ppa1 \
+		--build-arg REPO=ppa:ginggs/deal.ii-9.3.0-backports \
+		--build-arg CLANG_VERSION=11 \
+		--build-arg CLANG_REPO=https://github.com/dealii/dealii/releases/download/v9.3.0/ \
 		dependencies-focal
 	docker push dealii/dependencies:focal
 	docker tag dealii/dependencies:focal dealii/dependencies:latest
+	docker tag dealii/dependencies:focal dealii/dependencies:focal-v9.3.0
 	docker push dealii/dependencies:latest
+	docker push dealii/dependencies:focal-v9.3.0
 
-all: v9.1.1-bionic v9.2.0-bionic v9.2.0-focal dependencies-focal
+all: v9.3.0-focal dependencies-focal
 
-.PHONY: all v9.1.1-bionic v9.2.0-bionic v9.2.0-focal dependencies-focal
+.PHONY: all v9.1.1-bionic v9.2.0-bionic v9.2.0-focal v9.3.0-focal dependencies-focal-v9.2.0 dependencies-focal

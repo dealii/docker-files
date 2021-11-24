@@ -2,8 +2,10 @@ FROM ubuntu:focal
 
 LABEL maintainer="luca.heltai@gmail.com"
 
-ARG VERSION=9.2.0-1~ubuntu20.04.1~ppa1
-ARG REPO=ppa:ginggs/deal.ii-9.2.0-backports
+ARG VERSION=9.3.0-1~ubuntu20.04.1~ppa1
+ARG REPO=ppa:ginggs/deal.ii-9.3.0-backports
+ARG CLANG_VERSION=11
+ARG CLANG_REPO=https://github.com/dealii/dealii/releases/download/v9.3.0/
 
 USER root
 RUN apt-get update && apt-get install -y software-properties-common \
@@ -34,8 +36,8 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en  
 ENV LC_ALL en_US.UTF-8
 
-RUN wget https://github.com/dealii/dealii/releases/download/v9.0.0/clang-format-6-linux.tar.gz \
-    && tar xfv clang* && cp clang-6/bin/clang-format /usr/local/bin/ \
+RUN wget ${CLANG_REPO}/clang-format-${CLANG_VERSION}-linux.tar.gz \
+    && tar xfv clang* && cp clang-${CLANG_VERSION}/bin/clang-format /usr/local/bin/ \
     && rm -rf clang*
 
 # add and enable the default user
