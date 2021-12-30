@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y software-properties-common \
     libboost-log1.71-dev \
     libboost-python-dev \
     libdeal.ii-dev=$VERSION \
+    libgmp-dev \
     libgtest-dev \
     locales \
     ninja-build \
@@ -39,6 +40,14 @@ ENV LC_ALL en_US.UTF-8
 RUN wget ${CLANG_REPO}/clang-format-${CLANG_VERSION}-linux.tar.gz \
     && tar xfv clang* && cp clang-${CLANG_VERSION}/bin/clang-format /usr/local/bin/ \
     && rm -rf clang*
+
+# Symengine
+RUN cd /usr/local/src && \
+    wget https://github.com/symengine/symengine/releases/download/v0.8.1/symengine-0.8.1.tar.gz && \
+    tar xvfz symengine-0.8.1.tar.gz && rm symengine-0.8.1.tar.gz &&\
+    cd symengine-0.8.1 && mkdir build && cd build && \
+    cmake -GNinja .. && ninja && ninja install && \
+    cd .. && rm -rf build
 
 # add and enable the default user
 ARG USER=dealii
