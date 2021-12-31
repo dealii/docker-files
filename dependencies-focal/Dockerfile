@@ -15,11 +15,8 @@ RUN apt-get update && apt-get install -y software-properties-common \
     libboost-log1.71-dev \
     libboost-python-dev \
     libdeal.ii-dev=$VERSION \
-    libflint-dev \
     libgmp-dev \
     libgtest-dev \
-    libmpc-dev \
-    llvm \
     locales \
     ninja-build \
     numdiff \
@@ -49,16 +46,7 @@ RUN cd /usr/local/src && \
     wget https://github.com/symengine/symengine/releases/download/v0.8.1/symengine-0.8.1.tar.gz && \
     tar xvfz symengine-0.8.1.tar.gz && rm symengine-0.8.1.tar.gz &&\
     cd symengine-0.8.1 && mkdir build && cd build && \
-    cmake \
-    -DWITH_GMP=on \
-    -DWITH_MPFR=on \
-    -DWITH_MPC=on \
-    -DINTEGER_CLASS=flint \
-    -DWITH_LLVM=on \
-    -DWITH_SYMENGINE_THREAD_SAFE=on \
-    -DWITH_BOOST=on  \
-    -GNinja .. && \
-    ninja && ninja install && \
+    cmake -GNinja .. && ninja && ninja install && \
     cd .. && rm -rf build
 
 # add and enable the default user
