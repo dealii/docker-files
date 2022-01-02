@@ -15,11 +15,15 @@ RUN apt-get update && apt-get install -y software-properties-common \
     libboost-log1.71-dev \
     libboost-python-dev \
     libdeal.ii-dev=$VERSION \
+    libflint-dev \
     libgmp-dev \
     libgtest-dev \
+    libmpc-dev \
+    llvm \
     locales \
     ninja-build \
     numdiff \
+    python-is-python3 \
     python3-dev \
     python3-distutils \
     python3-matplotlib \
@@ -42,16 +46,32 @@ RUN wget ${CLANG_REPO}/clang-format-${CLANG_VERSION}-linux.tar.gz \
     && rm -rf clang*
 
 # Symengine
-RUN cd /usr/local/src && \
+RUN cd /usr/src && \
     wget https://github.com/symengine/symengine/releases/download/v0.8.1/symengine-0.8.1.tar.gz && \
     tar xvfz symengine-0.8.1.tar.gz && rm symengine-0.8.1.tar.gz &&\
     cd symengine-0.8.1 && mkdir build && cd build && \
-    cmake -GNinja .. && ninja && ninja install && \
+    cmake \
+    -DBUILD_BENCHMARKS=off \
+    -DBUILD_SHARED_LIBS=on \
+    -DBUILD_TESTS=off \
+    -DINTEGER_CLASS=flint \
+    -DWITH_BOOST=on  \
+    -DWITH_GMP=on \
+    -DWITH_LLVM=on \
+    -DWITH_MPC=on \
+    -DWITH_MPFR=on \
+    -DWITH_SYMENGINE_THREAD_SAFE=on \
+    -GNinja .. && \
+    ninja && ninja install && \
     cd .. && rm -rf build
+
+RUN ldconfig
+ENV PYTHONPATH "/usr/local/lib/python3.8/site-packages/"
 
 # add and enable the default user
 ARG USER=dealii
-RUN adduser --disabled-password --gecos '' $USER
+ARG USER_ID=1000
+RUN adduser --disabled-password --gecos '' --uid $USER_ID $USER
 RUN adduser $USER sudo; echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 #make sure everything is in place
@@ -61,4 +81,3 @@ ENV HOME /home/$USER
 ENV USER $USER
 ENV OMPI_MCA_btl "^vader"
 WORKDIR $HOME
-
