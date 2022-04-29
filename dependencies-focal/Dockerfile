@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y software-properties-common \
     git \
     libboost-log1.71-dev \
     libboost-python-dev \
+    libcgal-dev \
     libdeal.ii-dev=$VERSION \
     libflint-dev \
     libgmp-dev \
