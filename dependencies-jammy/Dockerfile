@@ -1,19 +1,19 @@
-FROM ubuntu:focal
+FROM ubuntu:jammy
 
 LABEL maintainer="luca.heltai@gmail.com"
 
-ARG VERSION=9.4.0-1ubuntu2~bpo20.04.1~ppa1
+ARG VERSION=9.4.0-1ubuntu2~bpo22.04.1~ppa1
 ARG REPO=ppa:ginggs/deal.ii-9.4.0-backports
 ARG CLANG_VERSION=11
 ARG CLANG_REPO=https://github.com/dealii/dealii/releases/download/v9.3.0/
 
 USER root
-ENV DEBIAN_FRONTEND=noninteractive 
 RUN apt-get update && apt-get install -y software-properties-common \
     && add-apt-repository $REPO \
-    && apt-get update && apt-get install -y \
+    && apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
     git \
-    libboost-log1.71-dev \
+    libboost-dev \
     libboost-python-dev \
     libcgal-dev \
     libdeal.ii-dev=$VERSION \
