@@ -66,7 +66,7 @@ dependencies-focal-v9.2.0:
 		dependencies-focal
 	docker push dealii/dependencies:focal-v9.2.0
 
-dependencies-focal:
+dependencies-focal-v9.3.0:
 	$(DOCKER_BUILD) -t dealii/dependencies:focal \
 		--build-arg VERSION=9.3.0-1~ubuntu20.04.1~ppa1 \
 		--build-arg REPO=ppa:ginggs/deal.ii-9.3.0-backports \
@@ -78,6 +78,19 @@ dependencies-focal:
 	docker tag dealii/dependencies:focal dealii/dependencies:focal-v9.3.0
 	docker push dealii/dependencies:latest
 	docker push dealii/dependencies:focal-v9.3.0
+
+dependencies-focal:
+	$(DOCKER_BUILD) -t dealii/dependencies:focal \
+                --build-arg VERSION=9.3.0-1~ubuntu20.04.1~ppa1 \
+                --build-arg REPO=ppa:ginggs/deal.ii-9.3.0-backports \
+                --build-arg CLANG_VERSION=11 \
+                --build-arg CLANG_REPO=https://github.com/dealii/dealii/releases/download/v9.3.0/ \
+                dependencies-focal
+	docker push dealii/dependencies:focal
+	docker tag dealii/dependencies:focal dealii/dependencies:latest
+	docker tag dealii/dependencies:focal dealii/dependencies:focal-v9.4.0
+	docker push dealii/dependencies:latest
+	docker push dealii/dependencies:focal-v9.4.0
 
 all: v9.3.0-focal dependencies-focal
 

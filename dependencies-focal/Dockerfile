@@ -33,12 +33,11 @@ RUN apt-get update && apt-get install -y software-properties-common \
     ssh \
     sudo \
     wget \
-    && apt-get remove -y libdeal.ii-dev=$VERSION \
+    && apt-get remove -y libdeal.ii-dev=$VERSION libcgal-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
-RUN locale-gen en_US.UTF-8  
-ENV LANG en_US.UTF-8  
+
 ENV LANGUAGE en_US:en  
 ENV LC_ALL en_US.UTF-8
 
@@ -65,6 +64,19 @@ RUN cd /usr/src && \
     -GNinja .. && \
     ninja && ninja install && \
     cd .. && rm -rf build
+
+# CGAL
+RUN cd /usr/src && \
+    wget https://github.com/CGAL/cgal/releases/download/v5.4.1/CGAL-5.4.1.tar.xz && \
+    tar xvf CGAL-5.4.1.tar.xz && \
+    rm -rf CGAL-5.4.1.tar.xz  && \
+    cd CGAL-5.4.1/  && \ 
+    mkdir build && cd build && \
+    cmake -GNinja .. -DCMAKE_INSTALL_PREFIX=/usr/ && \
+    ninja install && cd ../ && rm -rf build 
+
+RUN locale-gen en_US.UTF-8  
+ENV LANG en_US.UTF-8  
 
 RUN ldconfig
 ENV PYTHONPATH "/usr/local/lib/python3.8/site-packages/"
