@@ -76,6 +76,31 @@ RUN cd /usr/src && \
     cmake -GNinja .. -DCMAKE_INSTALL_PREFIX=/usr/ && \
     ninja install && cd ../ && rm -rf build 
 
+# VTK
+RUN cd /usr/src && \
+    wget https://gitlab.kitware.com/vtk/vtk/-/archive/v9.1.0/vtk-v9.1.0.tar.gz && \
+    tar xvf vtk-v9.1.0.tar.gz && \
+    rm -rf vtk-v9.1.0.tar.gz && \
+    cd vtk-v9.1.0/ && \ 
+    mkdir build && cd build && \
+    cmake -GNinja .. \
+        -DCMAKE_INSTALL_PREFIX=/usr/ \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DBUILD_SHARED_LIBS=ON \
+        -DBUILD_TESTING=OFF \
+        -DVTK_EXTRA_COMPILER_WARNINGS=OFF \
+        -DVTK_GROUP_ENABLE_Imaging=DONT_WANT \
+        -DVTK_GROUP_ENABLE_MPI=DONT_WANT \
+        -DVTK_GROUP_ENABLE_Qt=DONT_WANT \
+        -DVTK_GROUP_ENABLE_Rendering=DONT_WANT \
+        -DVTK_GROUP_ENABLE_StandAlone=WANT \
+        -DVTK_GROUP_ENABLE_Views=DONT_WANT \
+        -DVTK_GROUP_ENABLE_Web=DONT_WANT \
+        -DVTK_USE_MPI=OFF \
+        -DVTK_WRAP_JAVA=OFF \
+        -DVTK_WRAP_PYTHON=OFF && \
+    ninja install && cd ../ && rm -rf build
+
 RUN locale-gen en_US.UTF-8  
 ENV LANG en_US.UTF-8  
 
@@ -88,7 +113,7 @@ ARG UID=1000
 RUN adduser --disabled-password --gecos '' --uid $UID $USER
 RUN adduser $USER sudo; echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
-#make sure everything is in place
+# make sure everything is in place
 RUN chown -R $USER:$USER /home/$USER
 USER $USER
 ENV HOME /home/$USER
