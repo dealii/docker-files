@@ -35,7 +35,7 @@ ARG USER=dealii
 RUN adduser --disabled-password --gecos '' $USER
 RUN adduser $USER sudo; echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
-#make sure everything is in place
+# make sure everything is in place
 RUN chown -R $USER:$USER /home/$USER
 USER $USER
 ENV HOME /home/$USER
