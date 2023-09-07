@@ -1,19 +1,23 @@
-FROM ubuntu:focal
+ARG IMG=jammy
+
+FROM ubuntu:$IMG
 
 LABEL maintainer="luca.heltai@gmail.com"
 
-ARG VERSION=9.4.0-1ubuntu2~bpo20.04.1~ppa1
+ARG VERSION=9.4.0-1ubuntu2~bpo22.04.1~ppa1
 ARG REPO=ppa:ginggs/deal.ii-9.4.0-backports
 ARG CLANG_VERSION=11
 ARG CLANG_REPO=https://github.com/dealii/dealii/releases/download/v9.3.0/
 
 USER root
 ENV DEBIAN_FRONTEND=noninteractive 
+
 RUN apt-get update && apt-get install -y software-properties-common \
     && add-apt-repository $REPO \
-    && apt-get update && apt-get install -y \
+    && apt-get update && \
+    apt-get install -y \
     git \
-    libboost-log1.71-dev \
+    libboost-dev \
     libboost-python-dev \
     libcgal-dev \
     libdeal.ii-dev=$VERSION \
@@ -71,10 +75,10 @@ RUN cd /usr/src && \
     wget https://github.com/CGAL/cgal/releases/download/v5.5.2/CGAL-5.5.2.tar.xz && \
     tar xvf CGAL-5.5.2.tar.xz && \
     rm -rf CGAL-5.5.2.tar.xz  && \
-    cd CGAL-5.5.2/  && \
+    cd CGAL-5.5.2/  && \ 
     mkdir build && cd build && \
     cmake -GNinja .. -DCMAKE_INSTALL_PREFIX=/usr/ && \
-    ninja install && cd ../ && rm -rf build
+    ninja install && cd ../ && rm -rf build 
 
 # VTK
 RUN cd /usr/src && \
@@ -101,8 +105,8 @@ RUN cd /usr/src && \
         -DVTK_WRAP_PYTHON=OFF && \
     ninja install && cd ../ && rm -rf build
 
-RUN locale-gen en_US.UTF-8
-ENV LANG en_US.UTF-8
+RUN locale-gen en_US.UTF-8  
+ENV LANG en_US.UTF-8  
 
 RUN ldconfig
 ENV PYTHONPATH "/usr/local/lib/python3.8/site-packages/"
