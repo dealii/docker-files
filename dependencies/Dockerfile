@@ -43,8 +43,8 @@ RUN apt-get update && apt-get install -y software-properties-common \
     && rm -rf /var/lib/apt/lists/* \
     && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 
-ENV LANGUAGE en_US:en  
-ENV LC_ALL en_US.UTF-8
+ENV LANGUAGE=en_US:en  
+ENV LC_ALL=en_US.UTF-8
 
 RUN wget ${CLANG_REPO}/clang-format-${CLANG_VERSION}-linux.tar.gz \
     && tar xfv clang* && cp clang-${CLANG_VERSION}/bin/clang-format /usr/local/bin/ \
@@ -106,10 +106,10 @@ RUN cd /usr/src && \
     ninja install && cd ../ && rm -rf build
 
 RUN locale-gen en_US.UTF-8  
-ENV LANG en_US.UTF-8  
+ENV LANG=en_US.UTF-8  
 
 RUN ldconfig
-ENV PYTHONPATH "/usr/local/lib/python3.8/site-packages/"
+ENV PYTHONPATH="/usr/local/lib/python3.8/site-packages/"
 
 # add and enable the default user
 ARG USER=dealii
@@ -120,7 +120,7 @@ RUN adduser $USER sudo; echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 # make sure everything is in place
 RUN chown -R $USER:$USER /home/$USER
 USER $USER
-ENV HOME /home/$USER
-ENV USER $USER
-ENV OMPI_MCA_btl "^vader"
+ENV HOME=/home/$USER
+ENV USER=$USER
+ENV OMPI_MCA_btl="^vader"
 WORKDIR $HOME

@@ -16,6 +16,7 @@
 # Use no-cache option to force rebuild
 # DOCKER_BUILD=docker build --no-cache
 DOCKER_BUILD=docker build
+DOCKER_BUILD=docker buildx build --push --platform linux/amd64,linux/arm64 --output type=registry
 
 # Repos:
 # ppa:ginggs/deal.ii-backports
@@ -101,26 +102,23 @@ dependencies-focal-v9.3.0:
 dependencies-focal:
 	$(DOCKER_BUILD) -t dealii/dependencies:focal \
 		--build-arg IMG=focal \
-                --build-arg VERSION=9.4.0-1ubuntu2~bpo20.04.1~ppa1 \
-                --build-arg REPO=ppa:ginggs/deal.ii-9.4.0-backports \
-                --build-arg CLANG_VERSION=11 \
+                --build-arg VERSION=9.5.1-1~ubuntu20.04.1~ppa1 \
+                --build-arg REPO=ppa:ginggs/deal.ii-9.5.1-backports \
+                --build-arg CLANG_VERSION=16 \
                 --build-arg CLANG_REPO=https://github.com/dealii/dealii/releases/download/v9.3.0/ \
                 dependencies
 	docker push dealii/dependencies:focal
 
 dependencies-jammy:
-	$(DOCKER_BUILD) -t dealii/dependencies:jammy \
+	$(DOCKER_BUILD) \
+		-t dealii/dependencies:jammy \
+		-t dealii/dependencies:latest \
 		--build-arg IMG=jammy \
-                --build-arg VERSION=9.4.0-1ubuntu2~bpo22.04.1~ppa1 \
-                --build-arg REPO=ppa:ginggs/deal.ii-9.4.0-backports \
-                --build-arg CLANG_VERSION=11 \
-                --build-arg CLANG_REPO=https://github.com/dealii/dealii/releases/download/v9.3.0/ \
+                --build-arg VERSION=9.5.1-1~ubuntu22.04.1~ppa2 \
+                --build-arg REPO=ppa:ginggs/deal.ii-9.5.1-backports \
+                --build-arg CLANG_VERSION=16 \
+                --build-arg CLANG_REPO=https://github.com/dealii/dealii/releases/download/v9.5.1/ \
                 dependencies
-	docker push dealii/dependencies:jammy
-	docker tag dealii/dependencies:jammy dealii/dependencies:latest
-	docker tag dealii/dependencies:jammy dealii/dependencies:jammy-v9.4.0
-	docker push dealii/dependencies:latest
-	docker push dealii/dependencies:jammy-v9.4.0
 
 v9.4.2-focal:
 	$(DOCKER_BUILD) -t dealii/dealii:v9.4.2-focal \
@@ -153,8 +151,23 @@ v9.5.0-jammy:
                 --build-arg PROCS=12 \
                 github
 	docker push dealii/dealii:v9.5.0-jammy
-	docker tag dealii/dealii:v9.5.0-jammy dealii/dealii:latest
-	docker push dealii/dealii:latest
+
+v9.5.1-focal:
+	$(DOCKER_BUILD) -t dealii/dealii:v9.5.1-focal \
+                --build-arg IMG=focal \
+                --build-arg VER=v9.5.1 \
+                --build-arg PROCS=12 \
+                github
+	docker push dealii/dealii:v9.5.1-focal
+
+v9.5.1-jammy:
+	$(DOCKER_BUILD) \
+		-t dealii/dealii:v9.5.1-jammy \
+		-t dealii/dealii:latest \
+                --build-arg IMG=jammy \
+                --build-arg VER=v9.5.1 \
+                --build-arg PROCS=12 \
+                github
 
 all: dependencies-focal v9.5.0-focal dependencies-jammy v9.5.0-jammy 
 
