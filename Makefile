@@ -169,6 +169,15 @@ v9.5.1-jammy:
                 --build-arg PROCS=12 \
                 github
 
+master-jammy:
+	$(DOCKER_BUILD) \
+		-t dealii/dealii:master-jammy \
+                --build-arg IMG=jammy \
+                --build-arg VER=master \
+                --build-arg PROCS=6 \
+                github
+
+
 all: dependencies-focal v9.5.0-focal dependencies-jammy v9.5.0-jammy 
 
 .PHONY: all \
