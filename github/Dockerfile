@@ -1,21 +1,22 @@
-ARG IMG=jammy
+ARG IMG=jammy    # Ubuntu image that contains all corresponding dependencies.
 
 FROM dealii/dependencies:$IMG
 
+ARG NJOBS=0      # Jobs used for building. Default: Use all available jobs.
+ARG VER=master   # deal.II branch that gets checked out.
+
 LABEL maintainer="luca.heltai@gmail.com"
 
-ARG VER=master
-ARG PROCS=2
-
 USER root
-RUN cd /usr/src \
-    && git clone https://github.com/dealii/dealii dealii-$VER \
-    && cd dealii-$VER && git checkout $VER && \
-    mkdir build && cd build \
-    && cmake -GNinja \
+
+RUN cd /usr/src && \
+    git clone https://github.com/dealii/dealii dealii-$VER && \
+    cd dealii-$VER && \
+    git checkout $VER && \
+    mkdir build && cd build && \
+    cmake -GNinja \
     -DCMAKE_PREFIX_PATH="/usr/lib/x86_64-linux-gnu/hdf5/openmpi;/usr/include/hdf5/openmpi" \
     -DDEAL_II_ALLOW_AUTODETECTION=OFF \
-    -DDEAL_II_COMPILE_EXAMPLES=OFF \
     -DDEAL_II_COMPONENT_PYTHON_BINDINGS=ON \
     -DCMAKE_CXX_FLAGS="-std=c++17" \
     -DDEAL_II_WITH_64BIT_INDICES=OFF \
@@ -49,9 +50,9 @@ RUN cd /usr/src \
     -DDEAL_II_WITH_UMFPACK=ON \
     -DDEAL_II_WITH_VTK=ON \
     -DDEAL_II_WITH_ZLIB=ON \
-    .. \
-    && ninja -j $PROCS install \
-    && cd ../ && rm -rf .git build
+    .. && \
+    ninja -j $NJOBS install && \
+    cd ../ && rm -rf .git build
 
 USER $USER
 WORKDIR $HOME
