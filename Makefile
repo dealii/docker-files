@@ -15,33 +15,31 @@
 
 # Use no-cache option to force rebuild
 # DOCKER_BUILD=docker build --no-cache
-DOCKER_BUILD=docker build
+DOCKER_BUILD=docker buildx build --push --platform linux/amd64,linux/arm64 --output type=registry
+DOCKER_BUILD=docker buildx build --push --platform linux/arm64 --output type=registry
+
 
 dependencies-jammy:
-	$(DOCKER_BUILD) -t dealii/dependencies:jammy \
+	$(DOCKER_BUILD) \
+		-t dealii/dependencies:jammy \
+		-t dealii/dependencies:jammy-v9.6.0 \
 		--build-arg IMG=jammy \
-                --build-arg VERSION=9.4.0-1ubuntu2~bpo22.04.1~ppa1 \
-                --build-arg REPO=ppa:ginggs/deal.ii-9.4.0-backports \
-                --build-arg CLANG_VERSION=11 \
-                --build-arg CLANG_REPO=https://github.com/dealii/dealii/releases/download/v9.3.0/ \
+                --build-arg VERSION=9.6.0-1~ubuntu22.04.1~ppa1 \
+                --build-arg REPO=ppa:ginggs/deal.ii-9.6.0-backports \
+                --build-arg CLANG_VERSION=16 \
                 dependencies
-	docker push dealii/dependencies:jammy
-	docker tag dealii/dependencies:jammy dealii/dependencies:jammy-v9.4.0
-	docker push dealii/dependencies:jammy-v9.4.0
 
 dependencies-noble:
-	$(DOCKER_BUILD) -t dealii/dependencies:noble \
+	$(DOCKER_BUILD) \
+		-t dealii/dependencies:noble \
+		-t dealii/dependencies:noble-v9.6.0 \
+		-t dealii/dependencies:latest \
 		--build-arg IMG=noble \
 		--build-arg VERSION=9.6.0-1~ubuntu24.04.1~ppa1 \
 		--build-arg REPO=ppa:ginggs/deal.ii-9.6.0-backports \
 		--build-arg CLANG_VERSION=16 \
 		--build-arg CLANG_REPO=https://github.com/dealii/dealii/releases/download/v9.6.0/ \
 		dependencies
-	docker push dealii/dependencies:noble
-	docker tag dealii/dependencies:noble dealii/dependencies:latest
-	docker tag dealii/dependencies:noble dealii/dependencies:noble-v9.6.0
-	docker push dealii/dependencies:noble
-	docker push dealii/dependencies:latest
 
 v9.5.0-jammy:
 	$(DOCKER_BUILD) -t dealii/dealii:v9.5.0-jammy \
@@ -66,10 +64,7 @@ v9.6.2-noble:
 all: dependencies-noble v9.6.2-noble
 
 .PHONY: all \
-	v9.1.1-bionic v9.2.0-bionic \
-	v9.2.0-focal v9.3.0-focal v9.4.0-focal v9.4.1-focal v9.4.2-focal \
-	v9.5.0-focal \
-	v9.4.0-jammy v9.4.1-jammy v9.4.2-jammy \
+	dependencies-jammy \
+	dependencies-noble \
 	v9.5.0-jammy \
-	dependencies-focal-v9.2.0 dependencies-focal-v9.3.0 dependencies-focal \
-	dependencies-jammy
+	v9.6.2-noble

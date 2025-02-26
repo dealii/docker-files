@@ -56,7 +56,6 @@ RUN cd /usr/src && \
     -DBUILD_TESTS=off \
     -DINTEGER_CLASS=flint \
     -DWITH_BOOST=on  \
-    -DWITH_GMP=on \
     -DWITH_LLVM=on \
     -DWITH_MPC=on \
     -DWITH_MPFR=on \
