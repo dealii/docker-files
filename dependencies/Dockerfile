@@ -7,7 +7,6 @@ LABEL maintainer="luca.heltai@gmail.com"
 ARG VERSION=9.4.0-1ubuntu2~bpo22.04.1~ppa1
 ARG REPO=ppa:ginggs/deal.ii-9.4.0-backports
 ARG CLANG_VERSION=11
-ARG CLANG_REPO=https://github.com/dealii/dealii/releases/download/v9.3.0/
 
 USER root
 ENV DEBIAN_FRONTEND=noninteractive 
@@ -16,6 +15,7 @@ RUN apt-get update && apt-get install -y software-properties-common \
     && add-apt-repository $REPO \
     && apt-get update && \
     apt-get install -y \
+    clang-format-${CLANG_VERSION} \
     git \
     libboost-dev \
     libboost-python-dev \
@@ -31,7 +31,6 @@ RUN apt-get update && apt-get install -y software-properties-common \
     numdiff \
     python-is-python3 \
     python3-dev \
-    python3-distutils \
     python3-matplotlib \
     python3-pybind11 \
     python3-scipy\
@@ -46,15 +45,11 @@ RUN apt-get update && apt-get install -y software-properties-common \
 ENV LANGUAGE en_US:en  
 ENV LC_ALL en_US.UTF-8
 
-RUN wget ${CLANG_REPO}/clang-format-${CLANG_VERSION}-linux.tar.gz \
-    && tar xfv clang* && cp clang-${CLANG_VERSION}/bin/clang-format /usr/local/bin/ \
-    && rm -rf clang*
-
 # Symengine
 RUN cd /usr/src && \
-    wget https://github.com/symengine/symengine/releases/download/v0.10.1/symengine-0.10.1.tar.gz && \
-    tar xvfz symengine-0.10.1.tar.gz && rm symengine-0.10.1.tar.gz &&\
-    cd symengine-0.10.1 && mkdir build && cd build && \
+    wget https://github.com/symengine/symengine/releases/download/v0.14.0/symengine-0.14.0.tar.gz && \
+    tar xvfz symengine-0.14.0.tar.gz && rm symengine-0.14.0.tar.gz &&\
+    cd symengine-0.14.0 && mkdir build && cd build && \
     cmake \
     -DBUILD_BENCHMARKS=off \
     -DBUILD_SHARED_LIBS=on \
@@ -82,10 +77,10 @@ RUN cd /usr/src && \
 
 # VTK
 RUN cd /usr/src && \
-    wget https://gitlab.kitware.com/vtk/vtk/-/archive/v9.1.0/vtk-v9.1.0.tar.gz && \
-    tar xvf vtk-v9.1.0.tar.gz && \
-    rm -rf vtk-v9.1.0.tar.gz && \
-    cd vtk-v9.1.0/ && \ 
+    wget https://gitlab.kitware.com/vtk/vtk/-/archive/v9.4.0/vtk-v9.4.0.tar.gz && \
+    tar xvf vtk-v9.4.0.tar.gz && \
+    rm -rf vtk-v9.4.0.tar.gz && \
+    cd vtk-v9.4.0/ && \ 
     mkdir build && cd build && \
     cmake -GNinja .. \
         -DCMAKE_INSTALL_PREFIX=/usr/ \
@@ -113,7 +108,7 @@ ENV PYTHONPATH "/usr/local/lib/python3.8/site-packages/"
 
 # add and enable the default user
 ARG USER=dealii
-ARG UID=1000
+ARG UID=1001
 RUN adduser --disabled-password --gecos '' --uid $UID $USER
 RUN adduser $USER sudo; echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
