@@ -17,12 +17,12 @@ jobs:
       fail-fast: false
       matrix:
         system:
-          - ubuntu_version: "focal"
-            dealii_version: 9.4.0-1ubuntu2~bpo20.04.1~ppa1
-            tag: focal-v9.5.1
-          - ubuntu_version: "jammy"
-            dealii_version: 9.4.0-1ubuntu2~bpo22.04.1~ppa1
-            tag: jammy-v9.5.1
+          - ubuntu_version: jammy
+            dealii_version: 9.6.0-1~ubuntu22.04.1~ppa1
+            tag: jammy-v9.6.0
+          - ubuntu_version: noble
+            dealii_version: 9.6.0-1~ubuntu24.04.1~ppa1
+            tag: noble-v9.6.0
 
     steps:
       - name: Checkout code
@@ -47,7 +47,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Docker image of dependencies ${{ matrix.system.ubuntu_version }}
+      - name: Build and push Docker image of dealii/dependencies:${{ matrix.system.ubuntu_version }}
         uses: docker/build-push-action@v5
         with:
           context: ./dependencies/
@@ -56,8 +56,10 @@ jobs:
           build-args: |
             IMG=${{ matrix.system.ubuntu_version }}
             VERSION=${{ matrix.system.dealii_version}}
+            REPO=ppa:ginggs/deal.ii-9.6.0-backports 
+            CLANG_VERSION=16
           platforms: linux/arm64,linux/amd64
           push: true
           tags: |
             ghcr.io/${{ github.repository }}:${{ matrix.system.tag }}
-            dealii/dependencies:${{ matrix.tag }}
+            dealii/dependencies:${{ matrix.system.tag }}
