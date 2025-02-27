@@ -2,11 +2,9 @@ ARG IMG=jammy
 
 FROM ubuntu:$IMG
 
-LABEL maintainer="luca.heltai@gmail.com"
-
 ARG VERSION=9.4.0-1ubuntu2~bpo22.04.1~ppa1
-ARG REPO=ppa:ginggs/deal.ii-9.4.0-backports
-ARG CLANG_VERSION=11
+ARG REPO=ppa:ginggs/deal.ii-9.6.0-backports
+ARG CLANG_VERSION=16
 
 USER root
 ENV DEBIAN_FRONTEND=noninteractive 
