@@ -26,7 +26,6 @@ dependencies-jammy:
 		--build-arg IMG=jammy \
                 --build-arg VERSION=9.6.0-1~ubuntu22.04.1~ppa1 \
                 --build-arg REPO=ppa:ginggs/deal.ii-9.6.0-backports \
-                --build-arg CLANG_VERSION=16 \
                 dependencies
 
 dependencies-noble:
@@ -37,8 +36,6 @@ dependencies-noble:
 		--build-arg IMG=noble \
 		--build-arg VERSION=9.6.0-1~ubuntu24.04.1~ppa1 \
 		--build-arg REPO=ppa:ginggs/deal.ii-9.6.0-backports \
-		--build-arg CLANG_VERSION=16 \
-		--build-arg CLANG_REPO=https://github.com/dealii/dealii/releases/download/v9.6.0/ \
 		dependencies
 
 v9.5.0-jammy:

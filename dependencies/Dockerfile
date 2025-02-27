@@ -1,10 +1,9 @@
-ARG IMG=jammy
+ARG IMG=noble
 
 FROM ubuntu:$IMG
 
-ARG VERSION=9.4.0-1ubuntu2~bpo22.04.1~ppa1
+ARG VERSION=9.6.0-1~ubuntu24.04.1~ppa1
 ARG REPO=ppa:ginggs/deal.ii-9.6.0-backports
-ARG CLANG_VERSION=16
 
 USER root
 ENV DEBIAN_FRONTEND=noninteractive 
@@ -13,7 +12,6 @@ RUN apt-get update && apt-get install -y software-properties-common \
     && add-apt-repository $REPO \
     && apt-get update && \
     apt-get install -y \
-    clang-format-${CLANG_VERSION} \
     git \
     libboost-dev \
     libboost-python-dev \
@@ -42,6 +40,12 @@ RUN apt-get update && apt-get install -y software-properties-common \
 
 ENV LANGUAGE=en_US:en  
 ENV LC_ALL=en_US.UTF-8
+
+RUN wget https://raw.githubusercontent.com/dealii/dealii/refs/heads/master/contrib/utilities/download_clang_format \
+    && chmod +x download_clang_format \
+    && ./download_clang_format \
+    && mv programs/clang-16/bin/clang-format /usr/local/bin/ \
+    && rm -rf download_clang_format programs
 
 # Symengine
 RUN cd /usr/src && \
