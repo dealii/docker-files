@@ -17,12 +17,12 @@ jobs:
       fail-fast: false
       matrix:
         system:
-          - ubuntu_version: "focal"
-            dealii_version: 9.4.0-1ubuntu2~bpo20.04.1~ppa1
-            tag: focal-v9.5.1
           - ubuntu_version: "jammy"
-            dealii_version: 9.4.0-1ubuntu2~bpo22.04.1~ppa1
-            tag: jammy-v9.5.1
+            dealii_version: 9.6.0-1~ubuntu22.04.1~ppa1
+            tag: jammy-v9.6.0
+          - ubuntu_version: "noble"
+            dealii_version: 9.6.0-1~ubuntu24.04.1~ppa1
+            tag: noble-v9.6.0
 
     steps:
       - name: Checkout code
@@ -60,4 +60,4 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository }}:${{ matrix.system.tag }}
-            dealii/dependencies:${{ matrix.tag }}
+            dealii/dependencies:${{ matrix.system.tag }}

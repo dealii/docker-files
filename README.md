@@ -30,3 +30,10 @@ not the library itself. These images are helpful to compile your own version
 of deal.II. All images containing only deal.II dependencies can be found at:
 
 <https://hub.docker.com/r/dealii/dependencies/tags/>
+
+# For developers
+
+If you want to update the dependencies image, open a pull request with the
+updated Dockerfile in the `dependencies` directory. The CI will build the image
+and push it to dockerhub. Notice that the image is built for all supported
+Ubuntu versions and tagged accordingly. The CI needs to be run manually.
