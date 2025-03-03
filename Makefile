@@ -39,6 +39,16 @@ dependencies-noble:
 		--build-arg REPO=ppa:ginggs/deal.ii-9.6.0-backports \
 		dependencies
 
+dependencies-%-merge::
+	docker buildx imagetools create -t dealii/dependencies:$* \
+		dealii/dependencies:$*-arm64 \
+		dealii/dependencies:$*-x86_64
+
+%-merge::
+	docker buildx imagetools create -t dealii/dealii:$* \
+		dealii/dealii:$*-arm64 \
+		dealii/dealii:$*-x86_64
+
 v9.6.2-noble:
 	$(DOCKER_BUILD) \
 		-t dealii/dealii:v9.6.2-noble-${ARCH} \
@@ -61,5 +71,7 @@ all: dependencies-noble v9.6.2-noble v9.6.2-jammy
 .PHONY: all \
 	dependencies-jammy \
 	dependencies-noble \
+	dependencies-%-merge \
+	%-merge \
 	v9.5.0-jammy \
 	v9.6.2-noble
