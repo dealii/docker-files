@@ -66,7 +66,11 @@ v9.6.2-jammy:
 		--build-arg PROCS=12 \
 		github
 
-all: dependencies-noble v9.6.2-noble v9.6.2-jammy
+noble: dependencies-noble v9.6.2-noble 
+
+jammy: dependencies-jammy v9.6.2-jammy
+
+all: noble jammy
 
 .PHONY: all \
 	dependencies-jammy \
