@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y software-properties-common \
     libmpc-dev \
     llvm \
     locales \
+    mold \
     ninja-build \
     numdiff \
     python-is-python3 \
