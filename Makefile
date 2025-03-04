@@ -13,12 +13,14 @@
 #
 # ---------------------------------------------------------------------
 
-# Use no-cache option to force rebuild
-# DOCKER_BUILD=docker build --no-cache
-DOCKER_BUILD=docker buildx build --push --platform linux/amd64,linux/arm64 --output type=registry
-DOCKER_BUILD=docker buildx build --push --platform linux/arm64 --output type=registry
 ARCH=$(shell uname -m)
+ifeq ($(ARCH),arm64)
+PLATFORM=linux/arm64
+else ifeq ($(ARCH),x86_64)
+PLATFORM=linux/amd64
+endif
 
+DOCKER_BUILD=docker buildx build --push --platform $(PLATFORM) --output type=registry
 
 dependencies-jammy:
 	$(DOCKER_BUILD) \
@@ -77,5 +79,5 @@ all: noble jammy
 	dependencies-noble \
 	dependencies-%-merge \
 	%-merge \
-	v9.5.0-jammy \
+	v9.6.2-jammy \
 	v9.6.2-noble

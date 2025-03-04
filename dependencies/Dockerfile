@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y software-properties-common \
     locales \
     mold \
     ninja-build \
-    mold \
+    lld \
     numdiff \
     python-is-python3 \
     python3-dev \
