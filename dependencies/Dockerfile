@@ -22,7 +22,6 @@ RUN apt-get update && apt-get install -y software-properties-common \
     libgtest-dev \
     libmpc-dev \
     locales \
-    mold \
     ninja-build \
     numdiff \
     python-is-python3 \
@@ -46,6 +45,20 @@ RUN wget https://raw.githubusercontent.com/dealii/dealii/refs/heads/master/contr
     && ./download_clang_format \
     && mv programs/clang-16/bin/clang-format /usr/local/bin/ \
     && rm -rf download_clang_format programs
+
+# mold
+RUN cd /usr/src && \
+    wget https://github.com/rui314/mold/archive/refs/tags/v2.36.0.tar.gz && \
+    tar xvfz v2.36.0.tar.gz && rm v2.36.0.tar.gz && \
+    cd mold-2.36.0 && \
+    ./install-build-deps.sh && \
+    mkdir build && cd build && \
+    cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_CXX_COMPILER=c++ \
+    -GNinja .. && \
+    ninja && ninja install && \
+    cd .. && rm -rf build
 
 # Symengine
 RUN cd /usr/src && \
