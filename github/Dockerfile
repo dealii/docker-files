@@ -46,7 +46,7 @@ RUN cd /usr/src \
     -DDEAL_II_WITH_TBB=ON \
     -DDEAL_II_WITH_TRILINOS=ON \
     -DDEAL_II_WITH_UMFPACK=ON \
-    -DDEAL_II_WITH_VTK=ON \
+    -DDEAL_II_WITH_VTK=OFF \
     -DDEAL_II_WITH_ZLIB=ON \
     .. \
     && ninja -j $PROCS install \
