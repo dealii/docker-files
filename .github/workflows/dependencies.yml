@@ -11,7 +11,7 @@ jobs:
   build-dependencies:
     if: (github.repository == 'dealii/docker-files')
     name: dependencies - ${{ matrix.system.ubuntu_version }} - ${{ matrix.arch.tag }}
-    runs-on: $${{ matrix.arch.runner }}
+    runs-on: ${{ matrix.arch.runner }}
 
     strategy:
       fail-fast: false
@@ -104,10 +104,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Merge images of ${{ matrix.docker }}:${{ matrix.tag }}
+      - name: Merge images of ${{ matrix.docker }}:${{ matrix.os }}
         run: |
           docker buildx imagetools create \
-             -t ${{ matrix.docker }}:${{ matrix.tag }} \
-             -t ${{ matrix.docker }}:${{ matrix.tag }}-${{ matrix.ver }} \
-             ${{ matrix.docker }}:${{ matrix.tag }}-${{ matrix.ver }}-amd64 \
-             ${{ matrix.docker }}:${{ matrix.tag }}-${{ matrix.ver }}-arm64
+             -t ${{ matrix.docker }}:${{ matrix.os }} \
+             -t ${{ matrix.docker }}:${{ matrix.os }}-${{ matrix.ver }} \
+             ${{ matrix.docker }}:${{ matrix.os }}-${{ matrix.ver }}-amd64 \
+             ${{ matrix.docker }}:${{ matrix.os }}-${{ matrix.ver }}-arm64
