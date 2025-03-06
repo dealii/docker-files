@@ -71,7 +71,7 @@ jobs:
   
   merge-dependencies:
     if: (github.repository == 'dealii/docker-files')
-    name: dependencies - ${{ matrix.system.ubuntu_version }} - ${{ matrix.arch.tag }}
+    name: dependencies - ${{docker}} - ${{ matrix.os }}
     runs-on: ubuntu-latest
     depends-on: build-dependencies
 
