@@ -1,4 +1,4 @@
-name: github-docker
+name: dependencies
 
 # this workflow only triggers when manually started
 on: workflow_dispatch

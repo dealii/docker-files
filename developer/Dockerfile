@@ -1,22 +1,23 @@
-ARG IMG=jammy
+ARG IMG=noble    # Ubuntu image that contains all corresponding dependencies.
 
 FROM dealii/dependencies:$IMG
 
-LABEL maintainer="luca.heltai@gmail.com"
-
-ARG VER=master
-ARG PROCS=2
+ARG NJOBS=0      # Jobs used for building. Default: Use all available jobs.
+ARG VER=master   # deal.II branch that gets checked out.
+ARG FLAGS=""     # Additional flags for the build.
 
 USER root
-RUN cd /usr/src \
-    && git clone https://github.com/dealii/dealii dealii-$VER \
-    && cd dealii-$VER && git checkout $VER && \
-    mkdir build && cd build \
-    && cmake -GNinja \
+
+RUN cd /usr/src && \
+    git clone https://github.com/dealii/dealii dealii-$VER && \
+    cd dealii-$VER && \
+    git checkout $VER && \
+    mkdir build && cd build && \
+    cmake -GNinja \
     -DCMAKE_PREFIX_PATH="/usr/lib/x86_64-linux-gnu/hdf5/openmpi;/usr/include/hdf5/openmpi" \
     -DDEAL_II_ALLOW_AUTODETECTION=OFF \
     -DDEAL_II_COMPONENT_PYTHON_BINDINGS=ON \
-    -DCMAKE_CXX_FLAGS="-std=c++17" \
+    -DCMAKE_CXX_FLAGS="-std=c++20 $FLAGS" \
     -DDEAL_II_WITH_64BIT_INDICES=OFF \
     -DDEAL_II_WITH_ADOLC=ON \
     -DDEAL_II_WITH_ARBORX=OFF \
@@ -25,7 +26,6 @@ RUN cd /usr/src \
     -DDEAL_II_WITH_BOOST=ON \
     -DDEAL_II_WITH_CGAL=ON \
     -DDEAL_II_WITH_COMPLEX_VALUES=ON \
-    -DDEAL_II_WITH_CUDA=OFF \
     -DDEAL_II_WITH_GINKGO=OFF \
     -DDEAL_II_WITH_GMSH=ON \
     -DDEAL_II_WITH_GSL=ON \
@@ -48,9 +48,9 @@ RUN cd /usr/src \
     -DDEAL_II_WITH_UMFPACK=ON \
     -DDEAL_II_WITH_VTK=ON \
     -DDEAL_II_WITH_ZLIB=ON \
-    .. \
-    && ninja -j $PROCS install \
-    && cd ../ && rm -rf .git build
+    .. && \
+    ninja -j $NJOBS install && \
+    cd ../ && rm -rf .git build
 
 USER $USER
 WORKDIR $HOME

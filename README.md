@@ -1,3 +1,5 @@
+[![workflows/developer](https://github.com/dealii/docker-files/actions/workflows/developer.yml/badge.svg?branch=master)](https://github.com/dealii/docker-files/actions/workflows/developer.yml?query=branch%3Amaster)
+
 # Docker files to create Docker images with deal.II
 
 Started from @tjhei, edited by @luca-heltai
