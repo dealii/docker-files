@@ -78,9 +78,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        docker: [ghcr.io/${{ github.repository }}, dealii/dependencies]
-        os: [jammy, noble]
-        ver: [9.6.0]
+        - docker: [ghcr.io/${{ github.repository }}, dealii/dependencies]
+        - os: [jammy, noble]
+        - ver: [9.6.0]
 
     steps:
       - name: Set up Docker Buildx
