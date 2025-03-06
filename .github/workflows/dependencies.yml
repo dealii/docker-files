@@ -10,12 +10,20 @@ permissions:
 jobs:
   build-dependencies:
     if: (github.repository == 'dealii/docker-files')
-    name: dependencies - ${{ matrix.system.ubuntu_version }}
-    runs-on: ubuntu-latest
+    name: dependencies - ${{ matrix.system.ubuntu_version }} - ${{ matrix.arch.tag }}
+    runs-on: $${{ matrix.arch.runner }}
 
     strategy:
       fail-fast: false
       matrix:
+        arch:
+          - build: linux/arm64
+            runner: ubuntu-24.04-arm
+            tag: arm64
+          - build: linux/amd64
+            runner: ubuntu-24.04
+            tag: amd64
+            
         system:
           - ubuntu_version: jammy
             dealii_version: 9.6.0-1~ubuntu22.04.1~ppa1
@@ -27,9 +35,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -47,19 +52,59 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Docker image of dealii/dependencies:${{ matrix.system.ubuntu_version }}
+      - name: Build and push Docker image of dealii/dependencies:${{ matrix.system.ubuntu_version }}-${{ matrix.arch.tag }}
         uses: docker/build-push-action@v5
         with:
           context: ./dependencies/
-          cache-from: type=registry,ref=dealii/dependencies:${{ matrix.system.ubuntu_version }}
+          cache-from: type=registry,ref=dealii/dependencies:${{ matrix.system.ubuntu_version }}-${{ matrix.arch.tag }}
           cache-to: type=inline
           build-args: |
             IMG=${{ matrix.system.ubuntu_version }}
             VERSION=${{ matrix.system.dealii_version}}
             REPO=ppa:ginggs/deal.ii-9.6.0-backports 
             CLANG_VERSION=16
-          platforms: linux/arm64,linux/amd64
+          platforms: ${{ matrix.arch.build }}
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:${{ matrix.system.tag }}
-            dealii/dependencies:${{ matrix.system.tag }}
+            ghcr.io/${{ github.repository }}:${{ matrix.system.tag }}-${{ matrix.system.arch.tag }}
+            dealii/dependencies:${{ matrix.system.tag }}-${{ matrix.system.arch.tag }}
+  
+  merge-dependencies:
+    if: (github.repository == 'dealii/docker-files')
+    name: dependencies - ${{docker}} - ${{ matrix.os }}
+    runs-on: ubuntu-latest
+    depends-on: build-dependencies
+
+    strategy:
+      fail-fast: false
+      matrix:
+        docker: [ghcr.io/${{ github.repository }}, dealii/dependencies]
+        os: [jammy, noble]
+        ver: [9.6.0]
+
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge images of ${{ matrix.docker }}:${{ matrix.tag }}
+        run: |
+          docker buildx imagetools create \
+             -t ${{ matrix.docker }}:${{ matrix.tag }} \
+             -t ${{ matrix.docker }}:${{ matrix.tag }}-${{ matrix.ver }} \
+             ${{ matrix.docker }}:${{ matrix.tag }}-${{ matrix.ver }}-amd64 \
+             ${{ matrix.docker }}:${{ matrix.tag }}-${{ matrix.ver }}-arm64
+    
+ 

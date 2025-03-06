@@ -13,16 +13,19 @@
 #
 # ---------------------------------------------------------------------
 
-# Use no-cache option to force rebuild
-# DOCKER_BUILD=docker build --no-cache
-DOCKER_BUILD=docker buildx build --push --platform linux/amd64,linux/arm64 --output type=registry
-DOCKER_BUILD=docker buildx build --push --platform linux/arm64 --output type=registry
+ARCH=$(shell uname -m)
+ifeq ($(ARCH),arm64)
+PLATFORM=linux/arm64
+else ifeq ($(ARCH),x86_64)
+PLATFORM=linux/amd64
+endif
 
+DOCKER_BUILD=docker buildx build --push --platform $(PLATFORM) --output type=registry
 
 dependencies-jammy:
 	$(DOCKER_BUILD) \
-		-t dealii/dependencies:jammy \
-		-t dealii/dependencies:jammy-v9.6.0 \
+		-t dealii/dependencies:jammy-${ARCH} \
+		-t dealii/dependencies:jammy-v9.6.0-${ARCH} \
 		--build-arg IMG=jammy \
                 --build-arg VERSION=9.6.0-1~ubuntu22.04.1~ppa1 \
                 --build-arg REPO=ppa:ginggs/deal.ii-9.6.0-backports \
@@ -30,38 +33,51 @@ dependencies-jammy:
 
 dependencies-noble:
 	$(DOCKER_BUILD) \
-		-t dealii/dependencies:noble \
-		-t dealii/dependencies:noble-v9.6.0 \
-		-t dealii/dependencies:latest \
+		-t dealii/dependencies:noble-${ARCH} \
+		-t dealii/dependencies:noble-v9.6.0-${ARCH} \
+		-t dealii/dependencies:latest-${ARCH} \
 		--build-arg IMG=noble \
 		--build-arg VERSION=9.6.0-1~ubuntu24.04.1~ppa1 \
 		--build-arg REPO=ppa:ginggs/deal.ii-9.6.0-backports \
 		dependencies
 
-v9.5.0-jammy:
-	$(DOCKER_BUILD) -t dealii/dealii:v9.5.0-jammy \
-                --build-arg IMG=jammy \
-                --build-arg VER=v9.5.0 \
-                --build-arg PROCS=12 \
-                github
-	docker push dealii/dealii:v9.5.0-jammy
-	docker tag dealii/dealii:v9.5.0-jammy dealii/dealii:latest
-	docker push dealii/dealii:latest
+dependencies-%-merge::
+	docker buildx imagetools create -t dealii/dependencies:$* \
+		dealii/dependencies:$*-arm64 \
+		dealii/dependencies:$*-x86_64
+
+%-merge::
+	docker buildx imagetools create -t dealii/dealii:$* \
+		dealii/dealii:$*-arm64 \
+		dealii/dealii:$*-x86_64
 
 v9.6.2-noble:
-	$(DOCKER_BUILD) -t dealii/dealii:v9.6.2-noble \
+	$(DOCKER_BUILD) \
+		-t dealii/dealii:v9.6.2-noble-${ARCH} \
+		-t dealii/dealii:latest-${ARCH} \
 		--build-arg IMG=noble \
 		--build-arg VER=v9.6.2 \
 		--build-arg PROCS=12 \
 		github
-	docker push dealii/dealii:v9.6.2-noble
-	docker tag dealii/dealii:v9.6.2-noble dealii/dealii:latest
-	docker push dealii/dealii:latest
 
-all: dependencies-noble v9.6.2-noble
+v9.6.2-jammy:
+	$(DOCKER_BUILD) \
+		-t dealii/dealii:v9.6.2-jammy-${ARCH} \
+		--build-arg IMG=jammy \
+		--build-arg VER=v9.6.2 \
+		--build-arg PROCS=12 \
+		github
+
+noble: dependencies-noble v9.6.2-noble 
+
+jammy: dependencies-jammy v9.6.2-jammy
+
+all: noble jammy
 
 .PHONY: all \
 	dependencies-jammy \
 	dependencies-noble \
-	v9.5.0-jammy \
+	dependencies-%-merge \
+	%-merge \
+	v9.6.2-jammy \
 	v9.6.2-noble
