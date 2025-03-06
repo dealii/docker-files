@@ -66,8 +66,8 @@ jobs:
           platforms: ${{ matrix.arch.build }}
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:${{ matrix.system.tag }}-${{ matrix.system.arch.tag }}
-            dealii/dependencies:${{ matrix.system.tag }}-${{ matrix.system.arch.tag }}
+            ghcr.io/${{ github.repository }}:${{ matrix.system.tag }}-${{ matrix.arch.tag }}
+            dealii/dependencies:${{ matrix.system.tag }}-${{ matrix.arch.tag }}
   
   merge-dependencies:
     if: (github.repository == 'dealii/docker-files')
