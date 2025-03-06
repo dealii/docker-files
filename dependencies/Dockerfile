@@ -21,11 +21,10 @@ RUN apt-get update && apt-get install -y software-properties-common \
     libgmp-dev \
     libgtest-dev \
     libmpc-dev \
+    lld \
     llvm \
     locales \
-    mold \
     ninja-build \
-    lld \
     numdiff \
     python-is-python3 \
     python3-dev \
