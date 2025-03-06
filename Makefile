@@ -18,6 +18,7 @@ ifeq ($(ARCH),arm64)
 PLATFORM=linux/arm64
 else ifeq ($(ARCH),x86_64)
 PLATFORM=linux/amd64
+ARCH=amd64
 endif
 
 DOCKER_BUILD=docker buildx build --push --platform $(PLATFORM) --output type=registry
@@ -44,12 +45,12 @@ dependencies-noble:
 dependencies-%-merge::
 	docker buildx imagetools create -t dealii/dependencies:$* \
 		dealii/dependencies:$*-arm64 \
-		dealii/dependencies:$*-x86_64
+		dealii/dependencies:$*-amd64
 
 %-merge::
 	docker buildx imagetools create -t dealii/dealii:$* \
 		dealii/dealii:$*-arm64 \
-		dealii/dealii:$*-x86_64
+		dealii/dealii:$*-amd64
 
 v9.6.2-noble:
 	$(DOCKER_BUILD) \
