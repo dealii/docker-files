@@ -21,8 +21,6 @@ RUN apt-get update && apt-get install -y software-properties-common \
     libgmp-dev \
     libgtest-dev \
     libmpc-dev \
-    lld \
-    llvm \
     locales \
     ninja-build \
     numdiff \
