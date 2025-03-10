@@ -47,6 +47,8 @@ RUN wget https://raw.githubusercontent.com/dealii/dealii/refs/heads/master/contr
     && rm -rf download_clang_format programs
 
 # mold
+# We require at least mold 2.32 to be able to link deal.II on ARM architectures.
+# See also: https://github.com/dealii/dealii/pull/18172#issuecomment-2696956258
 RUN cd /usr/src && \
     wget https://github.com/rui314/mold/archive/refs/tags/v2.36.0.tar.gz && \
     tar xvfz v2.36.0.tar.gz && rm v2.36.0.tar.gz && \
