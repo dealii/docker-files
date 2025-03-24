@@ -1,9 +1,7 @@
 name: developer
 
 on:
-  push:
-    branches:
-      - "developer*"
+  workflow_dispatch:
   schedule:
     - cron: "0 */12 * * *"
 
@@ -15,7 +13,7 @@ jobs:
   build-master-docker-ubuntu:
     # Build images for different ubuntu versions on different platforms
 
-    if: (github.event_name == 'schedule' && github.repository == 'dealii/docker-files') || github.event_name != 'schedule'
+    if: github.repository == 'dealii/docker-files'
 
     name: build master docker ${{ matrix.ubuntu_version }} ${{ matrix.architecture }}
     runs-on: ${{ matrix.runs-on }}
@@ -78,7 +76,7 @@ jobs:
   merge:
     # Merge all images for a specific ubuntu version
 
-    if: (github.event_name == 'schedule' && github.repository == 'dealii/docker-files') || github.event_name != 'schedule'
+    if: github.repository == 'dealii/docker-files'
 
     runs-on: ubuntu-24.04
     needs:
