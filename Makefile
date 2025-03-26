@@ -58,16 +58,16 @@ v9.6.2-noble:
 		-t dealii/dealii:latest-${ARCH} \
 		--build-arg IMG=noble \
 		--build-arg VER=v9.6.2 \
-		--build-arg PROCS=12 \
-		github
+		--build-arg NJOBS=12 \
+		developer
 
 v9.6.2-jammy:
 	$(DOCKER_BUILD) \
 		-t dealii/dealii:v9.6.2-jammy-${ARCH} \
 		--build-arg IMG=jammy \
 		--build-arg VER=v9.6.2 \
-		--build-arg PROCS=12 \
-		github
+		--build-arg NJOBS=12 \
+		developer
 
 noble: dependencies-noble v9.6.2-noble 
 
