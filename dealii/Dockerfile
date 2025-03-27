@@ -14,10 +14,11 @@ RUN cd /usr/src && \
     git checkout $VER && \
     mkdir build && cd build && \
     cmake -GNinja \
+    -DCMAKE_CXX_FLAGS="$FLAGS" \
+    -DCMAKE_CXX_STANDARD=20 \
     -DCMAKE_PREFIX_PATH="/usr/lib/x86_64-linux-gnu/hdf5/openmpi;/usr/include/hdf5/openmpi" \
     -DDEAL_II_ALLOW_AUTODETECTION=OFF \
     -DDEAL_II_COMPONENT_PYTHON_BINDINGS=ON \
-    -DCMAKE_CXX_FLAGS="-std=c++20 $FLAGS" \
     -DDEAL_II_WITH_64BIT_INDICES=OFF \
     -DDEAL_II_WITH_ADOLC=ON \
     -DDEAL_II_WITH_ARBORX=OFF \
