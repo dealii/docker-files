@@ -1,4 +1,4 @@
-[![workflows/developer](https://github.com/dealii/docker-files/actions/workflows/developer.yml/badge.svg?branch=master)](https://github.com/dealii/docker-files/actions/workflows/developer.yml?query=branch%3Amaster)
+[![workflows/dealii](https://github.com/dealii/docker-files/actions/workflows/dealii.yml/badge.svg?branch=master)](https://github.com/dealii/docker-files/actions/workflows/dealii.yml?query=branch%3Amaster)
 
 # Docker files to create Docker images with deal.II
 
