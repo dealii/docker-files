@@ -30,7 +30,7 @@ dependencies-jammy:
 		--build-arg IMG=jammy \
                 --build-arg VERSION=9.6.0-1~ubuntu22.04.1~ppa1 \
                 --build-arg REPO=ppa:ginggs/deal.ii-9.6.0-backports \
-                dependencies
+                ./dependencies
 
 dependencies-noble:
 	$(DOCKER_BUILD) \
@@ -40,7 +40,7 @@ dependencies-noble:
 		--build-arg IMG=noble \
 		--build-arg VERSION=9.6.0-1~ubuntu24.04.1~ppa1 \
 		--build-arg REPO=ppa:ginggs/deal.ii-9.6.0-backports \
-		dependencies
+		./dependencies
 
 dependencies-%-merge::
 	docker buildx imagetools create -t dealii/dependencies:$* \
@@ -59,7 +59,7 @@ v9.6.2-noble:
 		--build-arg IMG=noble \
 		--build-arg VER=v9.6.2 \
 		--build-arg NJOBS=12 \
-		developer
+		./dealii
 
 v9.6.2-jammy:
 	$(DOCKER_BUILD) \
@@ -67,7 +67,7 @@ v9.6.2-jammy:
 		--build-arg IMG=jammy \
 		--build-arg VER=v9.6.2 \
 		--build-arg NJOBS=12 \
-		developer
+		./dealii
 
 noble: dependencies-noble v9.6.2-noble 
 

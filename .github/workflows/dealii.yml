@@ -1,21 +1,31 @@
-name: developer
+name: dealii
 
 on:
-  workflow_dispatch:
   schedule:
-    - cron: "0 */12 * * *"
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+    inputs:
+      dealii_version:
+        description: 'deal.II version'
+        required: true
+        default: 'master'
+        type: choice
+        options:
+          - 'master'
+          - 'v9.6.2'
+          - 'v9.6.0'
 
 permissions:
   contents: read
   packages: write
 
 jobs:
-  build-master-docker-ubuntu:
+  build-dealii-docker-ubuntu:
     # Build images for different ubuntu versions on different platforms
 
     if: github.repository == 'dealii/docker-files'
 
-    name: build master docker ${{ matrix.ubuntu_version }} ${{ matrix.architecture }}
+    name: build ${{ matrix.dealii_version }} docker ${{ matrix.ubuntu_version }} ${{ matrix.architecture }}
     runs-on: ${{ matrix.runs-on }}
 
     strategy:
@@ -34,6 +44,8 @@ jobs:
           # Specify the number of jobs explicitly since the default '0'
           # causes the github workers to disconnect (potential crash).
           - n_jobs: 4
+          # Specify default version for 'schedule' event
+          - dealii_version: ${{ inputs.dealii_version || 'master' }}
 
     steps:
       - name: Checkout code
@@ -55,22 +67,22 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Docker image of master ${{ matrix.ubuntu_version }}-${{ matrix.architecture }}
+      - name: Build and push Docker image of ${{ matrix.dealii_version }} ${{ matrix.ubuntu_version }}-${{ matrix.architecture }}
         id: build
         uses: docker/build-push-action@v6
         with:
-          context: ./developer/
+          context: ./dealii/
           cache-from: type=registry,ref=dealii/dependencies:${{ matrix.ubuntu_version }}
           cache-to: type=inline
           build-args: |
             IMG=${{ matrix.ubuntu_version }}
             NJOBS=${{ matrix.n_jobs }}
-            VER=master
+            VER=${{ matrix.dealii_version }}
             FLAGS=${{ matrix.flags }}
           platforms: linux/${{ matrix.architecture }}
           tags: |
-            ghcr.io/dealii/dealii:master-${{ matrix.ubuntu_version }}-${{ matrix.architecture }}
-            dealii/dealii:master-${{ matrix.ubuntu_version }}-${{ matrix.architecture }}
+            ghcr.io/dealii/dealii:${{ matrix.dealii_version }}-${{ matrix.ubuntu_version }}-${{ matrix.architecture }}
+            dealii/dealii:${{ matrix.dealii_version }}-${{ matrix.ubuntu_version }}-${{ matrix.architecture }}
           push: true
 
   merge:
@@ -80,7 +92,7 @@ jobs:
 
     runs-on: ubuntu-24.04
     needs:
-      - build-master-docker-ubuntu
+      - build-dealii-docker-ubuntu
 
     strategy:
       fail-fast: false
@@ -91,6 +103,9 @@ jobs:
         ubuntu_version:
           - jammy
           - noble
+        include:
+          # Specify default version for 'schedule' event
+          - dealii_version: ${{ inputs.dealii_version || 'master' }}
 
     steps:
       - name: Set up Docker Buildx
@@ -109,9 +124,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Merge images of ${{ matrix.docker }}:${{ matrix.ubuntu_version }}
+      - name: Merge images of ${{ matrix.docker }}:${{ matrix.dealii_version }}-${{ matrix.ubuntu_version }}
         run: |
           docker buildx imagetools create \
-             -t ${{ matrix.docker }}:master-${{ matrix.ubuntu_version }} \
-             ${{ matrix.docker }}:master-${{ matrix.ubuntu_version }}-amd64 \
-             ${{ matrix.docker }}:master-${{ matrix.ubuntu_version }}-arm64
+             -t ${{ matrix.docker }}:${{ matrix.dealii_version }}-${{ matrix.ubuntu_version }} \
+             ${{ matrix.docker }}:${{ matrix.dealii_version }}-${{ matrix.ubuntu_version }}-amd64 \
+             ${{ matrix.docker }}:${{ matrix.dealii_version }}-${{ matrix.ubuntu_version }}-arm64
