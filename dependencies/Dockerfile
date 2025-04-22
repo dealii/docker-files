@@ -91,6 +91,10 @@ RUN cd /usr/src && \
     ninja install && cd ../ && rm -rf build 
 
 # VTK
+# We install VTK from source because of a dependency clash with
+# the ubuntu jammy packages of VTK and Trilinos.
+# See also: https://github.com/dealii/dealii/pull/15266#issuecomment-1563047320
+#      and: https://github.com/dealii/docker-files/pull/41#discussion_r1207205943
 RUN cd /usr/src && \
     wget https://gitlab.kitware.com/vtk/vtk/-/archive/v9.4.0/vtk-v9.4.0.tar.gz && \
     tar xvf vtk-v9.4.0.tar.gz && \
