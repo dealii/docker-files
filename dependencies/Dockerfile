@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y software-properties-common \
     libgmp-dev \
     libgtest-dev \
     libmpc-dev \
+    llvm-15 \
     locales \
     ninja-build \
     numdiff \
@@ -73,6 +74,7 @@ RUN cd /usr/src && \
     -DBUILD_TESTS=off \
     -DINTEGER_CLASS=flint \
     -DWITH_BOOST=on  \
+    -DWITH_LLVM=on \
     -DWITH_MPC=on \
     -DWITH_MPFR=on \
     -DWITH_SYMENGINE_THREAD_SAFE=on \
