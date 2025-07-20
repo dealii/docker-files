@@ -90,6 +90,13 @@ RUN cd /usr/src && \
     cmake -GNinja .. -DCMAKE_INSTALL_PREFIX=/usr/ && \
     ninja install && cd ../ && rm -rf build 
 
+# MAGIC_ENUM
+RUN mkdir magic_enum && cd magic_enum && \
+    wget https://github.com/Neargye/magic_enum/releases/download/v0.9.7/magic_enum-v0.9.7.tar.gz && \
+    tar xvfz magic_enum-v0.9.7.tar.gz && \
+    mv include/magic_enum /usr/local/include && \
+    cd .. && rm -rf magic_enum
+
 # VTK
 # We install VTK from source because of a dependency clash with
 # the ubuntu jammy packages of VTK and Trilinos.
