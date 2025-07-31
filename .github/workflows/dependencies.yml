@@ -55,7 +55,6 @@ jobs:
             IMG=${{ matrix.system.ubuntu_version }}
             VERSION=${{ matrix.system.dealii_version}}
             REPO=ppa:ginggs/deal.ii-9.6.0-backports 
-            CLANG_VERSION=16
           platforms: ${{ matrix.arch.build }}
           push: true
           tags: |
