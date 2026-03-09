@@ -46,7 +46,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push Docker image of dealii/dependencies:${{ matrix.system.ubuntu_version }}-${{ matrix.arch.tag }}
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: ./dependencies/
           cache-from: type=registry,ref=dealii/dependencies:${{ matrix.system.ubuntu_version }}-${{ matrix.arch.tag }}

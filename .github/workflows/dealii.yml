@@ -61,7 +61,7 @@ jobs:
 
       - name: Build and push Docker image of ${{ matrix.dealii_version }} ${{ matrix.ubuntu_version }}-${{ matrix.architecture }}
         id: build
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: ./dealii/
           cache-from: type=registry,ref=dealii/dependencies:${{ matrix.ubuntu_version }}
