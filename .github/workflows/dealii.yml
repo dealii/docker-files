@@ -113,3 +113,11 @@ jobs:
              -t ${{ matrix.docker }}:${{ matrix.dealii_version }}-${{ matrix.ubuntu_version }} \
              ${{ matrix.docker }}:${{ matrix.dealii_version }}-${{ matrix.ubuntu_version }}-amd64 \
              ${{ matrix.docker }}:${{ matrix.dealii_version }}-${{ matrix.ubuntu_version }}-arm64
+
+  workflow-keepalive:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - uses: liskin/gh-workflow-keepalive@v1
