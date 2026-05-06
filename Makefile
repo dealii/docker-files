@@ -42,6 +42,16 @@ dependencies-noble:
 		--build-arg REPO=ppa:ginggs/deal.ii-9.7.1-backports \
 		./dependencies
 
+dependencies-resolute:
+	$(DOCKER_BUILD) \
+		-t dealii/dependencies:resolute-${ARCH} \
+		-t dealii/dependencies:resolute-v9.7.1-${ARCH} \
+		-t dealii/dependencies:latest-${ARCH} \
+		--build-arg IMG=resolute \
+		--build-arg VERSION=9.7.1-1~ubuntu24.04.1~ppa1 \
+		--build-arg REPO=ppa:ginggs/deal.ii-9.7.1-backports \
+		./dependencies
+
 dependencies-%-merge::
 	docker buildx imagetools create -t dealii/dependencies:$* \
 		dealii/dependencies:$*-arm64 \
@@ -51,6 +61,15 @@ dependencies-%-merge::
 	docker buildx imagetools create -t dealii/dealii:$* \
 		dealii/dealii:$*-arm64 \
 		dealii/dealii:$*-amd64
+
+v9.7.1-resolute:
+	$(DOCKER_BUILD) \
+		-t dealii/dealii:v9.7.1-resolute-${ARCH} \
+		-t dealii/dealii:latest-${ARCH} \
+		--build-arg IMG=resolute \
+		--build-arg VER=v9.7.1 \
+		--build-arg NJOBS=12 \
+		./dealii
 
 v9.7.1-noble:
 	$(DOCKER_BUILD) \
@@ -69,16 +88,20 @@ v9.7.1-jammy:
 		--build-arg NJOBS=12 \
 		./dealii
 
+resolute: dependencies-resolute v9.7.1-resolute
+
 noble: dependencies-noble v9.7.1-noble
 
 jammy: dependencies-jammy v9.7.1-jammy
 
-all: noble jammy
+all: resolute jammy noble
 
 .PHONY: all \
 	dependencies-jammy \
 	dependencies-noble \
+	dependencies-resolute \
 	dependencies-%-merge \
 	%-merge \
 	v9.7.1-jammy \
-	v9.7.1-noble
+	v9.7.1-noble \
+	v9.7.1-resolute

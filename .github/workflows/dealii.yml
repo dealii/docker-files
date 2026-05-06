@@ -30,7 +30,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ubuntu_version: [jammy, noble]
+        ubuntu_version: [jammy, noble, resolute]
         architecture: [amd64, arm64]
         include:
           - architecture: amd64
@@ -93,6 +93,7 @@ jobs:
         ubuntu_version:
           - jammy
           - noble
+          - resolute
         include:
           # Specify default version for 'schedule' event
           - dealii_version: ${{ inputs.dealii_version || 'master' }}

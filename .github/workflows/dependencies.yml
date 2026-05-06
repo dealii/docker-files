@@ -31,6 +31,9 @@ jobs:
           - ubuntu_version: noble
             dealii_version: 9.7.1-1~ubuntu24.04.1~ppa1
             tag: noble-v9.7.1
+          - ubuntu_version: resolute
+            dealii_version: 9.7.1-1~ubuntu26.04.1~ppa1
+            tag: resolute-v9.7.1
 
     steps:
       - name: Checkout code
@@ -74,6 +77,7 @@ jobs:
         os:
           - jammy
           - noble
+          - resolute
         ver:
           - v9.7.1
 
