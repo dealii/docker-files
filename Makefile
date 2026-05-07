@@ -48,7 +48,7 @@ dependencies-resolute:
 		-t dealii/dependencies:resolute-v9.7.1-${ARCH} \
 		-t dealii/dependencies:latest-${ARCH} \
 		--build-arg IMG=resolute \
-		--build-arg VERSION=9.7.1-1~ubuntu24.04.1~ppa1 \
+		--build-arg VERSION=9.7.1-1~ubuntu26.04.1~ppa1 \
 		--build-arg REPO=ppa:ginggs/deal.ii-9.7.1-backports \
 		./dependencies
 
