@@ -46,6 +46,23 @@ RUN wget https://raw.githubusercontent.com/dealii/dealii/refs/heads/master/contr
     && mv programs/clang-16/bin/clang-format /usr/local/bin/ \
     && rm -rf download_clang_format programs
 
+ARG IMG
+# ArborX jammy's Kokkos version is too old for the minimum ArborX version
+RUN if [ "$IMG" != "jammy" ]; then \
+      cd /usr/src && \
+      wget https://github.com/arborx/ArborX/archive/refs/tags/v1.3.tar.gz && \
+      tar xvf v1.3.tar.gz && \
+      rm -rf v1.3.tar.gz && \
+      cd ArborX-1.3/ && \
+      mkdir build && cd build && \
+      cmake -GNinja .. \
+      -DCMAKE_INSTALL_PREFIX=/usr/ \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DBUILD_SHARED_LIBS=ON \
+      -DARBORX_ENABLE_MPI=ON && \
+      ninja install && cd ../ && rm -rf build; \
+    fi
+
 # mold
 # We require at least mold 2.32 to be able to link deal.II on ARM architectures.
 # See also: https://github.com/dealii/dealii/pull/18172#issuecomment-2696956258
