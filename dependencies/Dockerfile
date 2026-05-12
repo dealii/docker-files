@@ -50,10 +50,10 @@ ARG IMG
 # ArborX jammy's Kokkos version is too old for the minimum ArborX version
 RUN if [ "$IMG" != "jammy" ]; then \
       cd /usr/src && \
-      wget https://github.com/arborx/ArborX/archive/refs/tags/v1.3.tar.gz && \
-      tar xvf v1.3.tar.gz && \
-      rm -rf v1.3.tar.gz && \
-      cd ArborX-1.3/ && \
+      wget https://github.com/arborx/ArborX/archive/refs/tags/v2.1.tar.gz && \
+      tar xvf v2.1.tar.gz && \
+      rm -rf v2.1.tar.gz && \
+      cd ArborX-2.1/ && \
       mkdir build && cd build && \
       cmake -GNinja .. \
       -DCMAKE_INSTALL_PREFIX=/usr/ \
