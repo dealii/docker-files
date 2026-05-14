@@ -8,7 +8,13 @@ ARG FLAGS=""     # Additional flags for the build.
 
 USER root
 
-RUN cd /usr/src && \
+ARG IMG
+RUN if [ "$IMG" != "jammy" ]; then \
+      ARBORX=ON; \
+    else
+      ARBORX=OFF; \
+    fi && \
+    cd /usr/src && \
     git clone https://github.com/dealii/dealii dealii-$VER && \
     cd dealii-$VER && \
     git checkout $VER && \
@@ -21,7 +27,7 @@ RUN cd /usr/src && \
     -DDEAL_II_COMPONENT_PYTHON_BINDINGS=ON \
     -DDEAL_II_WITH_64BIT_INDICES=OFF \
     -DDEAL_II_WITH_ADOLC=ON \
-    -DDEAL_II_WITH_ARBORX=ON \
+    -DDEAL_II_WITH_ARBORX=${ARBORX} \
     -DDEAL_II_WITH_ARPACK=ON \
     -DDEAL_II_WITH_ASSIMP=ON \
     -DDEAL_II_WITH_BOOST=ON \
