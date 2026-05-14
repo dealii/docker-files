@@ -11,7 +11,7 @@ USER root
 ARG IMG
 RUN if [ "$IMG" != "jammy" ]; then \
       ARBORX=ON; \
-    else
+    else \
       ARBORX=OFF; \
     fi && \
     cd /usr/src && \
