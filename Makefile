@@ -1,6 +1,6 @@
 # ---------------------------------------------------------------------
 #
-# Copyright (C) 2020 - 2025 by the deal.II authors
+# Copyright (C) 2020 - 2026 by the deal.II authors
 #
 # This file is part of the deal.II library.
 #
@@ -22,15 +22,6 @@ ARCH=amd64
 endif
 
 DOCKER_BUILD=docker buildx build --push --platform $(PLATFORM) --output type=registry
-
-dependencies-jammy:
-	$(DOCKER_BUILD) \
-		-t dealii/dependencies:jammy-${ARCH} \
-		-t dealii/dependencies:jammy-v9.7.1-${ARCH} \
-		--build-arg IMG=jammy \
-                --build-arg VERSION=9.7.1-1~ubuntu22.04.1~ppa1 \
-                --build-arg REPO=ppa:ginggs/deal.ii-9.7.1-backports \
-                ./dependencies
 
 dependencies-noble:
 	$(DOCKER_BUILD) \
@@ -61,24 +52,12 @@ v9.7.1-noble:
 		--build-arg NJOBS=12 \
 		./dealii
 
-v9.7.1-jammy:
-	$(DOCKER_BUILD) \
-		-t dealii/dealii:v9.7.1-jammy-${ARCH} \
-		--build-arg IMG=jammy \
-		--build-arg VER=v9.7.1 \
-		--build-arg NJOBS=12 \
-		./dealii
-
 noble: dependencies-noble v9.7.1-noble
 
-jammy: dependencies-jammy v9.7.1-jammy
-
-all: noble jammy
+all: noble
 
 .PHONY: all \
-	dependencies-jammy \
 	dependencies-noble \
 	dependencies-%-merge \
 	%-merge \
-	v9.7.1-jammy \
 	v9.7.1-noble

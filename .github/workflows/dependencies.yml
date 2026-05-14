@@ -25,9 +25,6 @@ jobs:
             tag: amd64
 
         system:
-          - ubuntu_version: jammy
-            dealii_version: 9.7.1-1~ubuntu22.04.1~ppa1
-            tag: jammy-v9.7.1
           - ubuntu_version: noble
             dealii_version: 9.7.1-1~ubuntu24.04.1~ppa1
             tag: noble-v9.7.1
@@ -72,7 +69,6 @@ jobs:
         docker:
           - dealii/dependencies
         os:
-          - jammy
           - noble
         ver:
           - v9.7.1
