@@ -1,9 +1,9 @@
-ARG IMG=noble
+ARG IMG=resolute
 
 FROM ubuntu:$IMG
 
-ARG VERSION=9.7.1-1~ubuntu24.04.1~ppa1
-ARG REPO=ppa:ginggs/deal.ii-9.7.1-backports
+ARG VERSION=9.8.0-1~ubuntu26.04.1~ppa2
+ARG REPO=ppa:ginggs/deal.ii-9.8.0-backports
 
 USER root
 ENV DEBIAN_FRONTEND=noninteractive 
@@ -47,22 +47,19 @@ RUN wget https://raw.githubusercontent.com/dealii/dealii/refs/heads/master/contr
     && mv programs/clang-23/bin/clang-format /usr/local/bin/ \
     && rm -rf download_clang_format programs
 
-ARG IMG
-# ArborX jammy's Kokkos version is too old for the minimum ArborX version
-RUN if [ "$IMG" != "jammy" ]; then \
-      cd /usr/src && \
-      wget https://github.com/arborx/ArborX/archive/refs/tags/v2.1.tar.gz && \
-      tar xvf v2.1.tar.gz && \
-      rm -rf v2.1.tar.gz && \
-      cd ArborX-2.1/ && \
-      mkdir build && cd build && \
-      cmake -GNinja .. \
-      -DCMAKE_INSTALL_PREFIX=/usr/ \
-      -DCMAKE_BUILD_TYPE=Release \
-      -DBUILD_SHARED_LIBS=ON \
-      -DARBORX_ENABLE_MPI=ON && \
-      ninja install && cd ../ && rm -rf build; \
-    fi
+# ArborX
+RUN cd /usr/src && \
+    wget https://github.com/arborx/ArborX/archive/refs/tags/v2.1.tar.gz && \
+    tar xvf v2.1.tar.gz && \
+    rm -rf v2.1.tar.gz && \
+    cd ArborX-2.1/ && \
+    mkdir build && cd build && \
+    cmake -GNinja .. \
+    -DCMAKE_INSTALL_PREFIX=/usr/ \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_SHARED_LIBS=ON \
+    -DARBORX_ENABLE_MPI=ON && \
+    ninja install && cd ../ && rm -rf build
 
 # mold
 # We require at least mold 2.32 to be able to link deal.II on ARM architectures.
