@@ -64,5 +64,15 @@ RUN if [ "$IMG" != "jammy" ]; then \
     ninja -j $NJOBS install && \
     cd ../ && rm -rf .git build
 
+# Make the installed bindings discoverable by Ubuntu's Python interpreter.
+RUN ldconfig && python3 -c "import pathlib, sys, sysconfig; \
+    directory = pathlib.Path(sysconfig.get_path('purelib')); \
+    directory.mkdir(parents=True, exist_ok=True); \
+    directory.joinpath('dealii.pth').write_text('/usr/local/lib/python%d.%d/site-packages\\n' % sys.version_info[:2])"
+
 USER $USER
 WORKDIR $HOME
+
+# Check both installed variants as the default runtime user.
+RUN python3 -c "import PyDealII.Debug" && \
+    python3 -c "import PyDealII.Release"
