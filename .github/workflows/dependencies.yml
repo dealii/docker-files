@@ -6,6 +6,7 @@ on:
     paths:
     - .github/workflows/dependencies.yml
     - dependencies/**
+    - dealii/**
 
 permissions:
   contents: read
@@ -24,9 +25,11 @@ jobs:
           - build: linux/arm64
             runner: ubuntu-24.04-arm
             tag: arm64
+            flags: -mno-outline-atomics
           - build: linux/amd64
             runner: ubuntu-24.04
             tag: amd64
+            flags: ""
 
         system:
           - ubuntu_version: jammy
@@ -46,8 +49,40 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
+      - name: Free space for the compatibility build
+        if: runner.environment == 'github-hosted'
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
+        with:
+          driver: docker
+
+      - name: Build dependency candidate
+        uses: docker/build-push-action@v7
+        with:
+          context: ./dependencies/
+          cache-from: type=registry,ref=dealii/dependencies:${{ matrix.system.ubuntu_version }}-${{ matrix.arch.tag }}
+          build-args: |
+            IMG=${{ matrix.system.ubuntu_version }}
+            VERSION=${{ matrix.system.dealii_version }}
+            REPO=${{ matrix.system.repository }}
+          platforms: ${{ matrix.arch.build }}
+          load: true
+          tags: dealii/dependencies:candidate
+
+      - name: Build and test deal.II against the candidate
+        uses: docker/build-push-action@v7
+        with:
+          context: ./dealii/
+          build-args: |
+            IMG=${{ matrix.system.ubuntu_version }}
+            DEPENDENCIES_IMAGE=dealii/dependencies:candidate
+            VER=master
+            NJOBS=4
+            FLAGS=${{ matrix.arch.flags }}
+          platforms: ${{ matrix.arch.build }}
+          outputs: type=cacheonly
 
       - name: Login to Docker Hub
         if: github.event_name != 'pull_request'
@@ -56,21 +91,19 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Docker image of dealii/dependencies:${{ matrix.system.ubuntu_version }}-${{ matrix.arch.tag }}
+      - name: Publish tested dependencies
+        if: github.event_name != 'pull_request'
         uses: docker/build-push-action@v7
         with:
           context: ./dependencies/
-          cache-from: type=registry,ref=dealii/dependencies:${{ matrix.system.ubuntu_version }}-${{ matrix.arch.tag }}
           cache-to: type=inline
           build-args: |
             IMG=${{ matrix.system.ubuntu_version }}
             VERSION=${{ matrix.system.dealii_version }}
             REPO=${{ matrix.system.repository }}
           platforms: ${{ matrix.arch.build }}
-          push: ${{ github.event_name != 'pull_request' }}
-          load: ${{ github.event_name == 'pull_request' }}
-          tags: |
-            dealii/dependencies:${{ matrix.system.tag }}-${{ matrix.arch.tag }}
+          push: true
+          tags: dealii/dependencies:${{ matrix.system.tag }}-${{ matrix.arch.tag }}
 
   merge-dependencies:
     if: |

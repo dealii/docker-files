@@ -1,6 +1,8 @@
 ARG IMG=resolute    # Ubuntu image that contains all corresponding dependencies.
 
-FROM dealii/dependencies:$IMG
+ARG DEPENDENCIES_IMAGE=dealii/dependencies:${IMG}
+
+FROM $DEPENDENCIES_IMAGE
 
 ARG NJOBS=0      # Jobs used for building. Default: Use all available jobs.
 ARG VER=master   # deal.II branch that gets checked out.
