@@ -15,9 +15,11 @@ RUN if [ "$IMG" != "jammy" ]; then \
       ARBORX=OFF; \
     fi && \
     cd /usr/src && \
-    git clone https://github.com/dealii/dealii dealii-$VER && \
+    git init dealii-$VER && \
     cd dealii-$VER && \
-    git checkout $VER && \
+    git remote add origin https://github.com/dealii/dealii && \
+    git fetch --depth=1 origin "$VER" && \
+    git checkout --detach FETCH_HEAD && \
     mkdir build && cd build && \
     cmake -GNinja \
     -DCMAKE_CXX_FLAGS="$FLAGS" \
