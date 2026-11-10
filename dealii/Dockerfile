@@ -1,4 +1,4 @@
-ARG IMG=noble    # Ubuntu image that contains all corresponding dependencies.
+ARG IMG=resolute    # Ubuntu image that contains all corresponding dependencies.
 
 FROM dealii/dependencies:$IMG
 
