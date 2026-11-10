@@ -12,7 +12,7 @@ on:
         type: choice
         options:
           - 'master'
-          - 'v9.7.1'
+          - 'v9.8.0'
   pull_request:
     paths:
     - .github/workflows/dealii.yml
@@ -36,6 +36,10 @@ jobs:
       matrix:
         ubuntu_version: [jammy, noble, resolute]
         architecture: [amd64, arm64]
+        dealii_version: ["${{ inputs.dealii_version || 'master' }}"]
+        exclude:
+          - dealii_version: v9.8.0
+            ubuntu_version: jammy
         include:
           - architecture: amd64
             runs-on: ubuntu-24.04
@@ -47,8 +51,6 @@ jobs:
           # Specify the number of jobs explicitly since the default '0'
           # causes the github workers to disconnect (potential crash).
           - n_jobs: 4
-          # Specify default version for 'schedule' event
-          - dealii_version: ${{ inputs.dealii_version || 'master' }}
 
     steps:
       - name: Checkout code
@@ -101,9 +103,10 @@ jobs:
           - jammy
           - noble
           - resolute
-        include:
-          # Specify default version for 'schedule' event
-          - dealii_version: ${{ inputs.dealii_version || 'master' }}
+        dealii_version: ["${{ inputs.dealii_version || 'master' }}"]
+        exclude:
+          - dealii_version: v9.8.0
+            ubuntu_version: jammy
 
     steps:
       - name: Set up Docker Buildx

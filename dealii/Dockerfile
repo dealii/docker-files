@@ -1,6 +1,8 @@
-ARG IMG=noble    # Ubuntu image that contains all corresponding dependencies.
+ARG IMG=resolute    # Ubuntu image that contains all corresponding dependencies.
 
-FROM dealii/dependencies:$IMG
+ARG DEPENDENCIES_IMAGE=dealii/dependencies:${IMG}
+
+FROM $DEPENDENCIES_IMAGE
 
 ARG NJOBS=0      # Jobs used for building. Default: Use all available jobs.
 ARG VER=master   # deal.II branch that gets checked out.
@@ -15,9 +17,11 @@ RUN if [ "$IMG" != "jammy" ]; then \
       ARBORX=OFF; \
     fi && \
     cd /usr/src && \
-    git clone https://github.com/dealii/dealii dealii-$VER && \
+    git init dealii-$VER && \
     cd dealii-$VER && \
-    git checkout $VER && \
+    git remote add origin https://github.com/dealii/dealii && \
+    git fetch --depth=1 origin "$VER" && \
+    git checkout --detach FETCH_HEAD && \
     mkdir build && cd build && \
     cmake -GNinja \
     -DCMAKE_CXX_FLAGS="$FLAGS" \
@@ -62,5 +66,15 @@ RUN if [ "$IMG" != "jammy" ]; then \
     ninja -j $NJOBS install && \
     cd ../ && rm -rf .git build
 
+# Make the installed bindings discoverable by Ubuntu's Python interpreter.
+RUN ldconfig && python3 -c "import pathlib, sys, sysconfig; \
+    directory = pathlib.Path(sysconfig.get_path('purelib')); \
+    directory.mkdir(parents=True, exist_ok=True); \
+    directory.joinpath('dealii.pth').write_text('/usr/local/lib/python%d.%d/site-packages\\n' % sys.version_info[:2])"
+
 USER $USER
 WORKDIR $HOME
+
+# Check both installed variants as the default runtime user.
+RUN python3 -c "import PyDealII.Debug" && \
+    python3 -c "import PyDealII.Release"
