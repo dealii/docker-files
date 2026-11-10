@@ -10,16 +10,18 @@ Images are tagged with the ubuntu distribution they are based on.
 
 You can pull any of the images from dockerhub using (for example)
 
-    docker pull dealii/dealii:v9.7.1-noble
+    docker pull dealii/dealii:v9.8.0-noble
 
 after which you could run an interactive shell in it:
 
-    docker run -i -t dealii/dealii:v9.7.1-noble
+    docker run -i -t dealii/dealii:v9.8.0-noble
 
 This will drop you in an isolated environment where you can experiment with deal.II.
 
 Versions of interest:
 
+- ``dealii/dealii:v9.8.0-noble`` - deal.II v9.8.0, Ubuntu 24.04
+- ``dealii/dealii:v9.8.0-resolute`` - deal.II v9.8.0, Ubuntu 26.04
 - ``dealii/dealii:v9.7.1-noble`` - deal.II v9.7.1, Ubuntu 24.04
 - ``dealii/dealii:v9.7.1-jammy`` - deal.II v9.7.1, Ubuntu 22.04
 
@@ -39,3 +41,7 @@ If you want to update the dependencies image, open a pull request with the
 updated Dockerfile in the `dependencies` directory. The CI will build the image
 and push it to dockerhub. Notice that the image is built for all supported
 Ubuntu versions and tagged accordingly. The CI needs to be run manually.
+
+Historical Dockerfiles are available through Git tags (for example, `v9.7.1`).
+Use `pre-v9.8.0` for the configuration immediately before the 9.8.0 update.
+Older releases do not require separate Dockerfiles on the current branch.

@@ -1,9 +1,9 @@
-ARG IMG=noble
+ARG IMG=resolute
 
 FROM ubuntu:$IMG
 
-ARG VERSION=9.7.1-1~ubuntu24.04.1~ppa1
-ARG REPO=ppa:ginggs/deal.ii-9.7.1-backports
+ARG VERSION=9.8.0-1~ubuntu26.04.1~ppa2
+ARG REPO=ppa:ginggs/deal.ii-9.8.0-backports
 
 USER root
 ENV DEBIAN_FRONTEND=noninteractive 

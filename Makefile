@@ -13,12 +13,15 @@
 #
 # ---------------------------------------------------------------------
 
-ARCH=$(shell uname -m)
-ifeq ($(ARCH),arm64)
+ARCH ?= $(shell uname -m)
+ifneq ($(filter $(ARCH),arm64 aarch64),)
 PLATFORM=linux/arm64
-else ifeq ($(ARCH),x86_64)
+override ARCH=arm64
+else ifneq ($(filter $(ARCH),amd64 x86_64),)
 PLATFORM=linux/amd64
-ARCH=amd64
+override ARCH=amd64
+else
+$(error Unsupported architecture: $(ARCH))
 endif
 
 DOCKER_BUILD=docker buildx build --push --platform $(PLATFORM) --output type=registry
@@ -35,21 +38,20 @@ dependencies-jammy:
 dependencies-noble:
 	$(DOCKER_BUILD) \
 		-t dealii/dependencies:noble-${ARCH} \
-		-t dealii/dependencies:noble-v9.7.1-${ARCH} \
-		-t dealii/dependencies:latest-${ARCH} \
+		-t dealii/dependencies:noble-v9.8.0-${ARCH} \
 		--build-arg IMG=noble \
-		--build-arg VERSION=9.7.1-1~ubuntu24.04.1~ppa1 \
-		--build-arg REPO=ppa:ginggs/deal.ii-9.7.1-backports \
+		--build-arg VERSION=9.8.0-1~ubuntu24.04.1~ppa2 \
+		--build-arg REPO=ppa:ginggs/deal.ii-9.8.0-backports \
 		./dependencies
 
 dependencies-resolute:
 	$(DOCKER_BUILD) \
 		-t dealii/dependencies:resolute-${ARCH} \
-		-t dealii/dependencies:resolute-v9.7.1-${ARCH} \
+		-t dealii/dependencies:resolute-v9.8.0-${ARCH} \
 		-t dealii/dependencies:latest-${ARCH} \
 		--build-arg IMG=resolute \
-		--build-arg VERSION=9.7.1-5 \
-		--build-arg REPO='' \
+		--build-arg VERSION=9.8.0-1~ubuntu26.04.1~ppa2 \
+		--build-arg REPO=ppa:ginggs/deal.ii-9.8.0-backports \
 		./dependencies
 
 dependencies-%-merge::
@@ -62,21 +64,20 @@ dependencies-%-merge::
 		dealii/dealii:$*-arm64 \
 		dealii/dealii:$*-amd64
 
-v9.7.1-resolute:
+v9.8.0-resolute:
 	$(DOCKER_BUILD) \
-		-t dealii/dealii:v9.7.1-resolute-${ARCH} \
+		-t dealii/dealii:v9.8.0-resolute-${ARCH} \
 		-t dealii/dealii:latest-${ARCH} \
 		--build-arg IMG=resolute \
-		--build-arg VER=v9.7.1 \
+		--build-arg VER=v9.8.0 \
 		--build-arg NJOBS=12 \
 		./dealii
 
-v9.7.1-noble:
+v9.8.0-noble:
 	$(DOCKER_BUILD) \
-		-t dealii/dealii:v9.7.1-noble-${ARCH} \
-		-t dealii/dealii:latest-${ARCH} \
+		-t dealii/dealii:v9.8.0-noble-${ARCH} \
 		--build-arg IMG=noble \
-		--build-arg VER=v9.7.1 \
+		--build-arg VER=v9.8.0 \
 		--build-arg NJOBS=12 \
 		./dealii
 
@@ -88,9 +89,9 @@ v9.7.1-jammy:
 		--build-arg NJOBS=12 \
 		./dealii
 
-resolute: dependencies-resolute v9.7.1-resolute
+resolute: dependencies-resolute v9.8.0-resolute
 
-noble: dependencies-noble v9.7.1-noble
+noble: dependencies-noble v9.8.0-noble
 
 jammy: dependencies-jammy v9.7.1-jammy
 
@@ -103,5 +104,5 @@ all: resolute jammy noble
 	dependencies-%-merge \
 	%-merge \
 	v9.7.1-jammy \
-	v9.7.1-noble \
-	v9.7.1-resolute
+	v9.8.0-noble \
+	v9.8.0-resolute
