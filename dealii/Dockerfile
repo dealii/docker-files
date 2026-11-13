@@ -1,4 +1,4 @@
-ARG IMG=noble    # Ubuntu image that contains all corresponding dependencies.
+ARG IMG=resolute # Ubuntu image that contains all corresponding dependencies.
 
 FROM dealii/dependencies:$IMG
 
@@ -9,12 +9,7 @@ ARG FLAGS=""     # Additional flags for the build.
 USER root
 
 ARG IMG
-RUN if [ "$IMG" != "jammy" ]; then \
-      ARBORX=ON; \
-    else \
-      ARBORX=OFF; \
-    fi && \
-    cd /usr/src && \
+RUN cd /usr/src && \
     git clone https://github.com/dealii/dealii dealii-$VER && \
     cd dealii-$VER && \
     git checkout $VER && \
@@ -27,7 +22,7 @@ RUN if [ "$IMG" != "jammy" ]; then \
     -DDEAL_II_COMPONENT_PYTHON_BINDINGS=ON \
     -DDEAL_II_WITH_64BIT_INDICES=OFF \
     -DDEAL_II_WITH_ADOLC=ON \
-    -DDEAL_II_WITH_ARBORX=${ARBORX} \
+    -DDEAL_II_WITH_ARBORX=ON \
     -DDEAL_II_WITH_ARPACK=ON \
     -DDEAL_II_WITH_ASSIMP=ON \
     -DDEAL_II_WITH_BOOST=ON \
