@@ -40,10 +40,11 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# clang-format
 RUN wget https://raw.githubusercontent.com/dealii/dealii/refs/heads/master/contrib/utilities/download_clang_format \
     && chmod +x download_clang_format \
     && ./download_clang_format \
-    && mv programs/clang-16/bin/clang-format /usr/local/bin/ \
+    && mv programs/clang-23/bin/clang-format /usr/local/bin/ \
     && rm -rf download_clang_format programs
 
 ARG IMG
