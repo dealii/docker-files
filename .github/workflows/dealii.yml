@@ -12,7 +12,7 @@ on:
         type: choice
         options:
           - 'master'
-          - 'v9.7.1'
+          - 'v9.8.0'
   pull_request:
     paths:
     - .github/workflows/dealii.yml
@@ -34,14 +34,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ubuntu_version: [jammy, noble, resolute]
+        ubuntu_version: [noble, resolute]
         architecture: [amd64, arm64]
         include:
           - architecture: amd64
-            runs-on: ubuntu-24.04
+            runs-on: ubuntu-26.04
             flags: ""
           - architecture: arm64
-            runs-on: ubuntu-24.04-arm
+            runs-on: ubuntu-26.04-arm
             flags: -mno-outline-atomics
           # Use all available processors to build.
           # Specify the number of jobs explicitly since the default '0'
@@ -88,7 +88,7 @@ jobs:
       github.repository == 'dealii/docker-files' &&
       github.event_name != 'pull_request'
 
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs:
       - build-dealii-docker-ubuntu
 
@@ -98,7 +98,6 @@ jobs:
         docker:
           - dealii/dealii
         ubuntu_version:
-          - jammy
           - noble
           - resolute
         include:
